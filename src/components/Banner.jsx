@@ -104,7 +104,7 @@ const Banner = () => {
         </div>
 
         {/* STATS SECTION */}
-        <div className="mt-16 bg-white rounded-3xl border border-slate-100 shadow-lg overflow-hidden">
+        {/* <div className="mt-16 bg-white rounded-3xl border border-slate-100 shadow-lg overflow-hidden">
           <div className="grid grid-cols-1 sm:grid-cols-3">
             <div className="text-center p-8 border-b sm:border-b-0 sm:border-r">
               <div className="text-4xl md:text-5xl font-bold text-blue-600">
@@ -127,7 +127,7 @@ const Banner = () => {
               <p className="mt-2 text-slate-600">Appointments</p>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
     </section>
   );

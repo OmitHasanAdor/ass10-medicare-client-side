@@ -61,17 +61,17 @@ const Navbar = async () => {
             {!session ? (
               <>
                 <Link
-                  href="/login"
+                  href="/auth/signin"
                   className="px-5 py-2 rounded-xl border font-medium hover:bg-gray-50"
                 >
-                  Login
+                  Sign In
                 </Link>
 
                 <Link
-                  href="/register"
+                  href="/auth/signup"
                   className="px-5 py-2 rounded-xl bg-blue-600 text-white font-medium hover:bg-blue-700"
                 >
-                  Register
+                  Sign Up
                 </Link>
               </>
             ) : (

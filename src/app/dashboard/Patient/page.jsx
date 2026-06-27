@@ -3,7 +3,7 @@
 const PatientPage = () => {
     return (
         <div>
-            <h2>Hey this is Admin</h2>
+            <h2>Hey this is patient</h2>
         </div>
     );
 };

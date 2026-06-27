@@ -11,7 +11,7 @@ export async function DashboardSidebar() {
     // 1. Patient Navigation Links
     const patientNavLinks = [
         { icon: House, href: "/dashboard/patient", label: "Dashboard" },
-        { icon: Magnifier, href: "/dashboard/patient/doctors", label: "Find Doctors" },
+        { icon: Magnifier, href: "/find-doctors", label: "Find Doctors" },
         { icon: Calendar, href: "/dashboard/patient/appointments", label: "My Appointments" },
         { icon: CreditCard, href: "/dashboard/patient/payments", label: "Billing & Payments" },
         { icon: Person, href: "/profile", label: "Medical Profile" },

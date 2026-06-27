@@ -1,6 +1,10 @@
 "use client";
-
+import { Phone, UserCheck, Image } from "lucide-react"; // Image আইকন যোগ করা হয়েছে
 import { useState } from "react";
+import { signUp } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
+
+// import { useState } from "react";
 import {
     Card,
     Button,
@@ -17,9 +21,7 @@ import {
     At,
     ShieldKeyhole,
 } from "@gravity-ui/icons";
-import { Phone, UserCheck, Image } from "lucide-react"; // Image আইকন যোগ করা হয়েছে
-import { signUp } from "@/lib/auth-client";
-import { useRouter } from "next/navigation";
+
 
 export default function SignUpForm({ redirectTo = "/auth/signin" }) {
     const [name, setName] = useState("");
@@ -103,7 +105,7 @@ export default function SignUpForm({ redirectTo = "/auth/signin" }) {
         };
 
         // এক্সপ্রেস API-তে ডেটা পাঠানো (Port: 5000)
-        const response = await fetch("http://localhost:5000/api/users", {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/users`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

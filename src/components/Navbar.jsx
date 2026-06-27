@@ -9,6 +9,27 @@ const Navbar = async () => {
     headers: await headers(),
   });
 
+  // 🔄 সেশন থাকলে ডাটাবেজের সঠিক কালেকশন (users/user) থেকে ফটোসহ ডেটা নিয়ে আসার লজিক
+  let fullUserData = session?.user || null;
+
+  if (session?.user?.email) {
+    try {
+      // আপনার এক্সপ্রেস ব্যাকএন্ড এপিআই-তে রিকোয়েস্ট পাঠানো হচ্ছে
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/current-user?email=${session.user.email}`,
+        { cache: "no-store" } // লেটেস্ট ডেটা নিশ্চিত করতে ক্যাশ অফ রাখা হলো
+      );
+
+      if (res.ok) {
+        const dbUser = await res.json();
+        // সেশনের ইউজার ডেটার সাথে ডাটাবেজ থেকে আসা photo মার্জ করে দেওয়া হলো
+        fullUserData = { ...session.user, ...dbUser };
+      }
+    } catch (error) {
+      console.error("Error fetching full user data in Navbar:", error);
+    }
+  }
+
   const navLinks = [
     { name: "Home", href: "/" },
     { name: "Find Doctors", href: "/find-doctors" },
@@ -75,7 +96,8 @@ const Navbar = async () => {
                 </Link>
               </>
             ) : (
-              <UserDropdown user={session.user} />
+              // 🚀 এখানে সেশন ইউজারের বদলে ফটোসহ আপডেট হওয়া fullUserData পাস করা হয়েছে
+              <UserDropdown user={fullUserData} />
             )}
           </div>
 
@@ -84,6 +106,8 @@ const Navbar = async () => {
             <MobileMenu
               session={session}
               navLinks={navLinks}
+              // প্রয়োজনে মোবাইল মেনুতেও আপডেট ডাটা পাস করতে পারেন
+              user={fullUserData} 
             />
           </div>
         </div>

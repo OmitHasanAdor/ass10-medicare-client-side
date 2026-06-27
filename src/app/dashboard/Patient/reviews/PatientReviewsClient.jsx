@@ -20,7 +20,8 @@ const PatientReviewsClient = ({ initialReviews, doctors, patientId }) => {
             setRating(review.rating);
             setReviewText(review.reviewText);
         } else {
-            setSelectedDoctorId(doctors[0]?._id || "");
+            // 🚀 doctors একটি অ্যারে এবং তার লেংথ আছে কিনা নিশ্চিত হওয়া
+            setSelectedDoctorId(Array.isArray(doctors) && doctors.length > 0 ? doctors[0]._id : "");
             setRating(5);
             setReviewText("");
         }
@@ -35,7 +36,7 @@ const PatientReviewsClient = ({ initialReviews, doctors, patientId }) => {
     const handleAddReview = async (e) => {
         e.preventDefault();
         try {
-            const res = await fetch("http://localhost:5000/api/reviews/add", {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/reviews/add`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ patientId, doctorId: selectedDoctorId, rating, reviewText }),
@@ -106,7 +107,9 @@ const PatientReviewsClient = ({ initialReviews, doctors, patientId }) => {
                                 <div className="flex justify-between items-start">
                                     <div>
                                         <h3 className="font-bold text-gray-800 text-base">{rev.doctorDetails?.doctorName || "Medical Practitioner"}</h3>
-                                        <p className="text-[10px] text-gray-400 font-medium">Posted on: {new Date(rev.reviewDate?.$date || rev.reviewDate).toLocaleDateString()}</p>
+                                        <p className="text-[10px] text-gray-400 font-medium" suppressHydrationWarning>
+                                            Posted on: {new Date(rev.reviewDate?.$date || rev.reviewDate).toISOString().split('T')[0]}
+                                        </p>
                                     </div>
 
                                     {/* স্টার্স শোকেস */}
@@ -155,7 +158,8 @@ const PatientReviewsClient = ({ initialReviews, doctors, patientId }) => {
                                             onChange={(e) => setSelectedDoctorId(e.target.value)}
                                             className="w-full border p-2.5 rounded-xl text-sm bg-gray-50 outline-none"
                                         >
-                                            {doctors.map(doc => (
+                                            {/* 🚀 Array.isArray দিয়ে চেক করে লুপ চালানো হচ্ছে যাতে ক্র্যাশ না করে */}
+                                            {Array.isArray(doctors) && doctors.map(doc => (
                                                 <option key={doc._id} value={doc._id}>{doc.doctorName} ({doc.specialization})</option>
                                             ))}
                                         </select>

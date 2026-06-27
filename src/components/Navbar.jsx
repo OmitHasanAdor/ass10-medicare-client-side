@@ -9,12 +9,12 @@ const Navbar = async () => {
     headers: await headers(),
   });
 
-  // 🔄 সেশন থাকলে ডাটাবেজের সঠিক কালেকশন (users/user) থেকে ফটোসহ ডেটা নিয়ে আসার লজিক
+  // 🔄 সেশন থাকলে ডাটাবেজের সঠিক কালেকশন থেকে ফটোসহ ডেটা নিয়ে আসার লজিক
   let fullUserData = session?.user || null;
 
   if (session?.user?.email) {
     try {
-      // আপনার এক্সপ্রেস ব্যাকএন্ড এপিআই-তে রিকোয়েস্ট পাঠানো হচ্ছে
+      // আপনার এক্সপ্রেস ব্যাকএন্ড এপিআই-তে রিকোয়েস্ট পাঠানো হচ্ছে
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_SERVER_URL}/api/current-user?email=${session.user.email}`,
         { cache: "no-store" } // লেটেস্ট ডেটা নিশ্চিত করতে ক্যাশ অফ রাখা হলো
@@ -22,13 +22,18 @@ const Navbar = async () => {
 
       if (res.ok) {
         const dbUser = await res.json();
-        // সেশনের ইউজার ডেটার সাথে ডাটাবেজ থেকে আসা photo মার্জ করে দেওয়া হলো
+        // সেশনের ইউজার ডেটার সাথে ডাটাবেজ থেকে আসা role এবং photo মার্জ করে দেওয়া হলো
         fullUserData = { ...session.user, ...dbUser };
       }
     } catch (error) {
       console.error("Error fetching full user data in Navbar:", error);
     }
   }
+
+  // 👑 রোল অনুযায়ী ড্যাশবোর্ড পাথ নির্ধারণ (ডিফল্ট হিসেবে রোল না থাকলে /dashboard এ যাবে)
+  const dashboardHref = fullUserData?.role 
+    ? `/dashboard/${fullUserData.role.toLowerCase()}` 
+    : "/dashboard";
 
   const navLinks = [
     { name: "Home", href: "/" },
@@ -67,9 +72,10 @@ const Navbar = async () => {
               </Link>
             ))}
 
+            {/* 🚀 রোল বেসড ড্যাশবোর্ড রুট ডায়নামিকালি বসানো হয়েছে */}
             {session && (
               <Link
-                href="/dashboard"
+                href={dashboardHref}
                 className="font-medium text-gray-700 hover:text-blue-600 transition"
               >
                 Dashboard
@@ -96,7 +102,7 @@ const Navbar = async () => {
                 </Link>
               </>
             ) : (
-              // 🚀 এখানে সেশন ইউজারের বদলে ফটোসহ আপডেট হওয়া fullUserData পাস করা হয়েছে
+              // 🚀 এখানে সেশন ইউজারের বদলে ফটো ও রোলসহ আপডেট হওয়া fullUserData পাস করা হয়েছে
               <UserDropdown user={fullUserData} />
             )}
           </div>
@@ -106,7 +112,8 @@ const Navbar = async () => {
             <MobileMenu
               session={session}
               navLinks={navLinks}
-              // প্রয়োজনে মোবাইল মেনুতেও আপডেট ডাটা পাস করতে পারেন
+              // মোবাইল মেনুর ভেতরেও ড্যাশবোর্ড রুট ডায়নামিক করার জন্য পাস করা হলো
+              dashboardHref={dashboardHref}
               user={fullUserData} 
             />
           </div>

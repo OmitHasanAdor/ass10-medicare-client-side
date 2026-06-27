@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
 
-const MobileMenu = ({ session, navLinks }) => {
+const MobileMenu = ({ session, navLinks, dashboardHref }) => {
   const [open, setOpen] = useState(false);
 
   return (
@@ -23,36 +23,46 @@ const MobileMenu = ({ session, navLinks }) => {
             </div>
 
             <div className="mt-8 flex flex-col gap-5">
+              {/* জেনারেল নেভিগেশন লিঙ্কসমূহ */}
               {navLinks.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
+                  className="font-medium text-gray-700 hover:text-blue-600 transition"
                   onClick={() => setOpen(false)}
                 >
                   {item.name}
                 </Link>
               ))}
 
+              {/* 🚀 রোল বেসড ড্যাশবোর্ড রুট */}
               {session && (
-                <Link href="/dashboard">
+                <Link 
+                  href={dashboardHref || "/dashboard"} 
+                  className="font-medium text-gray-700 hover:text-blue-600 transition"
+                  onClick={() => setOpen(false)}
+                >
                   Dashboard
                 </Link>
               )}
 
-              {!session ? (
+              {/* অথেন্টিকেশন লিঙ্কসমূহ */}
+              {!session && (
                 <>
-                  <Link href="/login">
-                    Login
+                  <Link 
+                    href="/auth/signin" 
+                    className="font-medium text-gray-700 hover:text-blue-600 transition"
+                    onClick={() => setOpen(false)}
+                  >
+                    Sign In
                   </Link>
 
-                  <Link href="/register">
-                    Register
-                  </Link>
-                </>
-              ) : (
-                <>
-                  <Link href="/profile">
-                    Profile
+                  <Link 
+                    href="/auth/signup" 
+                    className="font-medium text-gray-700 hover:text-blue-600 transition"
+                    onClick={() => setOpen(false)}
+                  >
+                    Sign Up
                   </Link>
                 </>
               )}

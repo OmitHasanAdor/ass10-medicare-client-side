@@ -15,7 +15,7 @@ export async function DashboardSidebar() {
         { icon: Calendar, href: "/dashboard/patient/appointments", label: "My Appointments" },
         { icon: CreditCard, href: "/dashboard/patient/payments", label: "Billing & Payments" },
         // { icon: Person, href: "/profile", label: "Medical Profile" },
-        { icon: Gear, href: "/reviews", label: "Feedback & Reviews" },
+        { icon: Gear, href: "/dashboard/patient/reviews", label: "Feedback & Reviews" },
     ];
 
     // 2. Doctor Navigation Links

@@ -15,13 +15,19 @@ const PatientReviewsPage = async () => {
   if (patientId) {
     try {
       // ১. পেশেন্টের দেওয়া আগের রিভিউগুলো আনা
-      const resReviews = await fetch(`http://localhost:5000/api/reviews/patient/${patientId}`, { cache: "no-store" });
+      const resReviews = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/reviews/patient/${patientId}`, { cache: "no-store" });
       if (resReviews.ok) reviews = await resReviews.json();
 
       // ২. ড্রপডাউনে দেখানোর জন্য ডক্টরদের লিস্ট আনা (Add Review করার জন্য)
       // আপনার ডক্টর লিস্ট নিয়ে আসার এপিআই ইউআরএলটি এখানে বসাবেন
-      const resDoctors = await fetch(`http://localhost:5000/api/doctors`, { cache: "no-store" });
-      if (resDoctors.ok) doctorsList = await resDoctors.json();
+      const resDoctors = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/doctors`, { cache: "no-store" });
+     if (resDoctors.ok) {
+  const responseData = await resDoctors.json();
+  // যদি রেসপন্স সরাসরি অ্যারে হয় তবে সেটাই নিবে, আর অবজেক্টের ভেতর .data বা .doctors থাকলে তা হ্যান্ডেল করবে
+  doctorsList = Array.isArray(responseData) 
+    ? responseData 
+    : (responseData.data || responseData.doctors || []);
+}
     } catch (error) {
       console.error("Error loading review page data:", error);
     }

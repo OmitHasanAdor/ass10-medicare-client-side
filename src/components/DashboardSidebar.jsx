@@ -14,7 +14,7 @@ export async function DashboardSidebar() {
         { icon: Magnifier, href: "/find-doctors", label: "Find Doctors" },
         { icon: Calendar, href: "/dashboard/patient/appointments", label: "My Appointments" },
         { icon: CreditCard, href: "/dashboard/patient/payments", label: "Billing & Payments" },
-        { icon: Person, href: "/profile", label: "Medical Profile" },
+        // { icon: Person, href: "/profile", label: "Medical Profile" },
         { icon: Gear, href: "/settings", label: "Settings" },
     ];
 

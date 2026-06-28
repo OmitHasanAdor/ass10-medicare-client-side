@@ -40,7 +40,7 @@ const UserDropdown = ({ user }) => {
           alt={user?.name || "User"}
           width={40}
           height={40}
-          className="rounded-full object-cover" 
+          className="rounded-full h-13 w-13 object-cover" 
         />
 
         <span className="font-medium text-gray-700">

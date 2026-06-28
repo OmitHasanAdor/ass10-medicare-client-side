@@ -44,13 +44,13 @@ export async function DashboardSidebar() {
 
     // 3. Admin Navigation Links
     const adminNavLinks = [
-        { icon: House, href: "/dashboard/admin", label: "Admin Panel" },
+        { icon: House, href: "/dashboard/admin", label: "Ecosystem Analytics" },
         { icon: Users, href: "/dashboard/admin/users", label: "Manage Users" },
         { icon: ShieldCheck, href: "/dashboard/admin/verifications", label: "Verify Doctors" },
-        { icon: FileText, href: "/dashboard/admin/appointments", label: "All Appointments" },
-        { icon: CreditCard, href: "/dashboard/admin/payments", label: "Monitor Payments" },
-        { icon: BarChart3, href: "/dashboard/admin/reports", label: "Reports & Analytics" },
-        { icon: Gear, href: "/dashboard/admin/settings", label: "System Settings" },
+        { icon: FileText, href: "/dashboard/admin/appointments", label: "Clinical Appointments" },
+        { icon: CreditCard, href: "/dashboard/admin/payments", label: "Stripe Cash Flows" },
+        // { icon: BarChart3, href: "/dashboard/admin/reports", label: "Reports & Analytics" },
+        // { icon: Gear, href: "/dashboard/admin/settings", label: "System Settings" },
     ];
 
     // Map your role based arrays here

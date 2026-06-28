@@ -7,6 +7,22 @@ import Link from "next/link";
 export async function DashboardSidebar() {
 
     const user = await getUserSession();
+    let currentRole = 'patient'; // ফলব্যাক ডিফল্ট রোল
+
+    // 🌟 সেশন থেকে ইমেইল নিয়ে ব্যাকএন্ড থেকে ডাইনামিক রোল তুলে আনা
+    if (user?.email) {
+        try {
+            const response = await fetch(`http://localhost:5000/user-role?email=${user.email}`, {
+                cache: "no-store" // প্রতিবার লেটেস্ট রোল চেক করার জন্য
+            });
+            if (response.ok) {
+                const userData = await response.json();
+                currentRole = userData?.role || 'patient';
+            }
+        } catch (error) {
+            console.error("Sidebar role fetching error:", error);
+        }
+    }
 
     // 1. Patient Navigation Links
     const patientNavLinks = [
@@ -14,17 +30,16 @@ export async function DashboardSidebar() {
         { icon: Magnifier, href: "/find-doctors", label: "Find Doctors" },
         { icon: Calendar, href: "/dashboard/patient/appointments", label: "My Appointments" },
         { icon: CreditCard, href: "/dashboard/patient/payments", label: "Billing & Payments" },
-        // { icon: Person, href: "/profile", label: "Medical Profile" },
         { icon: Gear, href: "/dashboard/patient/reviews", label: "Feedback & Reviews" },
     ];
 
     // 2. Doctor Navigation Links
     const doctorNavLinks = [
         { icon: House, href: "/dashboard/doctor", label: "Overview" },
-        { icon: Calendar, href: "/dashboard/doctor/appointments", label: "Manage Schedules" },
+        { icon: Calendar, href: "/dashboard/doctor/schedules", label: "Manage Schedules" },
         { icon: Stethoscope, href: "/dashboard/doctor/consultations", label: "Consultations" },
-        { icon: Person, href: "/profile", label: "Professional Profile" },
-        { icon: Gear, href: "/settings", label: "Settings" },
+        { icon: Person, href: "/dashboard/doctor/prescription", label: "Prescription" },
+        { icon: Gear, href: "/dashboard/doctor/credentials", label: "Profile Credentials" },
     ];
 
     // 3. Admin Navigation Links
@@ -45,8 +60,7 @@ export async function DashboardSidebar() {
         admin: adminNavLinks
     };
 
-    // Safely get the items, fallback to 'patient' layout if role is missing
-    const currentRole = user?.role || 'patient';
+    // এখন পারফেক্টলি ডাটাবেজ থেকে আসা রোল অনুযায়ী লিংক সিলেক্ট হবে
     const navItems = navLinksMap[currentRole] || patientNavLinks;
 
     const navContent = (

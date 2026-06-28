@@ -116,6 +116,8 @@ export default function PatientOverviewClient({ appointments = [], patientName =
                         src={app.doctorDetails?.profileImage || "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d"} 
                         alt="Doctor" 
                         className="w-11 h-11 rounded-full object-cover ring-2 ring-white shadow-sm"
+                        width={400}
+                        height={400}
                       />
                       <div>
                         <h4 className="font-bold text-gray-800 text-sm">{app.doctorDetails?.doctorName || "Unknown Doctor"}</h4>
@@ -200,6 +202,8 @@ export default function PatientOverviewClient({ appointments = [], patientName =
                         src={doc.profileImage || "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d"} 
                         alt="Doctor" 
                         className="w-9 h-9 rounded-full object-cover" 
+                        width={400}
+                        height={400}
                       />
                       <div>
                         <h4 className="font-bold text-gray-800 text-xs md:text-sm">{doc.doctorName}</h4>

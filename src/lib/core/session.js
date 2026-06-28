@@ -17,14 +17,42 @@ export const getUserToken = async () => {
 
     return session?.session?.token || null;
 }
+//  @param {string} requiredRole
+export async function requireRole(requiredRole) {
+    // ১. Better Auth থেকে কারেন্ট সেশনটি নেওয়া
+    const session = await auth.api.getSession({
+        headers: await headers(),
+    });
 
-export const requireRole = async (role) => {
-    const user = await getUserSession()
-    if (!user) {
-        redirect('/auth/signin')
+    // সেশন না থাকলে সরাসরি লগইন পেজে রিডাইরেক্ট করবে
+    if (!session?.user?.email) {
+        redirect("/signin"); // আপনার লগইন পেজের রুট দিন
     }
-    if (user?.role !== role) {
-        redirect('/unauthorized')
+
+    try {
+        // ২. এক্সপ্রেস ব্যাকএন্ড থেকে এই ইউজারের রোল কুয়েরি করা 
+        // (অথবা সরাসরি মঙ্গোডিবি ড্রাইভারে usersCollection থেকেও চেক করতে পারেন)
+        const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/user-role?email=${session.user.email}`, {
+            cache: "no-store"
+        });
+
+        if (!response.ok) {
+            redirect("/unauthorized");
+        }
+
+        const userData = await response.json();
+
+        // ৩. রোল কন্ডিশন চেক করা
+        if (userData?.role !== requiredRole) {
+            // যদি রোল ম্যাচ না করে (যেমন পেশেন্ট যদি ডক্টর ড্যাশবোর্ডে ঢোকার চেষ্টা করে)
+            redirect("/unauthorized"); // একটি কাস্টম নট-অ্যালউড পেজে রিডাইরেক্ট
+        }
+
+        // রোল মিলে গেলে অবজেক্টটি রিটার্ন করবে (ভবিষ্যতে আইডি বা ডাটা লাগলে লেআউটে পাবেন)
+        return userData;
+
+    } catch (error) {
+        console.error("Role Verification Error:", error);
+        redirect("/unauthorized");
     }
-    return user;
 }

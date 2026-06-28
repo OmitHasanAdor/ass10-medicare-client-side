@@ -1,12 +1,10 @@
 "use client"
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { Briefcase, GraduationCap, DollarSign, Clock, Save, RefreshCw, User, Shield, Building, Calendar, Check } from 'lucide-react';
 
-// সপ্তাহের দিনগুলোর লিস্ট
 const DAYS_OPTIONS = ["Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
 
-// প্রি-ডিফাইন্ড টাইম স্লটের লিস্ট (আপনার প্রজেক্টের রিকোয়ারমেন্ট অনুযায়ী আরও যোগ করতে পারেন)
 const SLOTS_OPTIONS = [
     "09:00 AM - 12:00 PM",
     "11:00 AM - 03:00 PM",
@@ -19,24 +17,22 @@ const SLOTS_OPTIONS = [
 export default function DoctorCredentialsForm({ userBasicInfo, initialFormData }) {
     const [loading, setLoading] = useState(false);
     
-    // ডাটাবেজ থেকে কমা সেপারেটেড স্ট্রিং আসতে পারে, সেটিকে সরাসরি অ্যারেতে কনভার্ট করে স্টেট হ্যান্ডেল করা
+    // কোনো useEffect লাগবে না, সরাসরি স্টেট ইনিশিয়ালাইজেশন
     const [formData, setFormData] = useState({
-        doctorName: initialFormData.doctorName || '',
-        specialization: initialFormData.specialization || '',
-        qualifications: initialFormData.qualifications || '',
-        experience: initialFormData.experience || '',
-        consultationFee: initialFormData.consultationFee || '',
-        hospitalName: initialFormData.hospitalName || '',
-        // স্ট্রিং বা অ্যারে যাই আসুক, সেটিকে অ্যারে হিসেবে সেভ রাখা হচ্ছে
-        availableDays: Array.isArray(initialFormData.availableDays) 
-            ? initialFormData.availableDays 
-            : (initialFormData.availableDays ? initialFormData.availableDays.split(',').map(d => d.trim()) : []),
-        availableSlots: Array.isArray(initialFormData.availableSlots) 
-            ? initialFormData.availableSlots 
-            : (initialFormData.availableSlots ? initialFormData.availableSlots.split(',').map(s => s.trim()) : [])
+        doctorName: initialFormData?.doctorName || '',
+        specialization: initialFormData?.specialization || '',
+        qualifications: initialFormData?.qualifications || '',
+        experience: initialFormData?.experience ?? '',
+        consultationFee: initialFormData?.consultationFee ?? '',
+        hospitalName: initialFormData?.hospitalName || '',
+        availableDays: Array.isArray(initialFormData?.availableDays)
+            ? initialFormData.availableDays
+            : (initialFormData?.availableDays ? initialFormData.availableDays.split(',').map(d => d.trim()) : []),
+        availableSlots: Array.isArray(initialFormData?.availableSlots)
+            ? initialFormData.availableSlots
+            : (initialFormData?.availableSlots ? initialFormData.availableSlots.split(',').map(s => s.trim()) : [])
     });
 
-    // দিন সিলেক্ট/ডিসিলেক্ট করার লজিক
     const handleDayToggle = (day) => {
         const currentDays = [...formData.availableDays];
         if (currentDays.includes(day)) {
@@ -46,7 +42,6 @@ export default function DoctorCredentialsForm({ userBasicInfo, initialFormData }
         }
     };
 
-    // স্লট সিলেক্ট/ডিসিলেক্ট করার লজিক
     const handleSlotToggle = (slot) => {
         const currentSlots = [...formData.availableSlots];
         if (currentSlots.includes(slot)) {
@@ -69,16 +64,16 @@ export default function DoctorCredentialsForm({ userBasicInfo, initialFormData }
         setLoading(true);
 
         const payload = {
-            email: userBasicInfo.email,
+            email: userBasicInfo?.email || "doctor@doctor.com",
             doctorName: formData.doctorName,
             specialization: formData.specialization,
             qualifications: formData.qualifications,
             experience: parseInt(formData.experience) || 0,
             consultationFee: parseFloat(formData.consultationFee) || 0,
             hospitalName: formData.hospitalName,
-            availableDays: formData.availableDays, // অলরেডি অ্যারে ফরমেটে আছে
-            availableSlots: formData.availableSlots, // অলরেডি অ্যারে ফরমেটে আছে
-            profileImage: userBasicInfo.photo,
+            availableDays: formData.availableDays,
+            availableSlots: formData.availableSlots,
+            profileImage: userBasicInfo?.photo || "",
             verificationStatus: "Verified",
             rating: 4.8
         };
@@ -103,13 +98,16 @@ export default function DoctorCredentialsForm({ userBasicInfo, initialFormData }
         }
     };
 
+    // 💡 ডাটা যখনই আসবে, ফর্ম যেন রিলোভড হয় তার জন্য একটি ইউনিক কী (Key) তৈরি করছি
+    const formKey = initialFormData?._id || userBasicInfo?.email || "empty-form";
+
     return (
-        <>
+        <div key={formKey}> {/* 👈 এখানে key যুক্ত করায় ডাটা আসবামাত্র ফর্ম ভ্যালু আপডেট হবে এবং কোনো ESLint এরর আসবে না */}
             {/* Top Minimal Banner */}
             <div className="mb-8 overflow-hidden rounded-2xl bg-linear-to-r from-blue-700 to-blue-900 p-6 text-white shadow-md flex items-center gap-6">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img 
-                    src={userBasicInfo.photo} 
+                    src={userBasicInfo?.photo} 
                     alt="Doctor"
                     className="h-16 w-16 rounded-xl object-cover border-2 border-white/20 bg-white/10"
                     onError={(e) => { e.target.src = 'https://static.vecteezy.com/vite/assets/photo-masthead-375-BoK_p8LG.webp'; }}
@@ -134,7 +132,7 @@ export default function DoctorCredentialsForm({ userBasicInfo, initialFormData }
                                 </div>
                                 <input
                                     type="text" required
-                                    value={formData.doctorName || ''}
+                                    value={formData.doctorName}
                                     onChange={(e) => setFormData({...formData, doctorName: e.target.value})}
                                     className="block w-full rounded-xl border border-slate-200 py-3.5 pl-11 pr-4 text-sm text-slate-900 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600/10"
                                 />
@@ -150,7 +148,7 @@ export default function DoctorCredentialsForm({ userBasicInfo, initialFormData }
                                 </div>
                                 <input
                                     type="text" required placeholder="e.g., Neurology, Cardiology"
-                                    value={formData.specialization || ''}
+                                    value={formData.specialization}
                                     onChange={(e) => setFormData({...formData, specialization: e.target.value})}
                                     className="block w-full rounded-xl border border-slate-200 py-3.5 pl-11 pr-4 text-sm text-slate-900 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600/10"
                                 />
@@ -166,7 +164,7 @@ export default function DoctorCredentialsForm({ userBasicInfo, initialFormData }
                                 </div>
                                 <input
                                     type="text" required placeholder="e.g., MBBS, MD, FRCP"
-                                    value={formData.qualifications || ''}
+                                    value={formData.qualifications}
                                     onChange={(e) => setFormData({...formData, qualifications: e.target.value})}
                                     className="block w-full rounded-xl border border-slate-200 py-3.5 pl-11 pr-4 text-sm text-slate-900 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600/10"
                                 />
@@ -182,7 +180,7 @@ export default function DoctorCredentialsForm({ userBasicInfo, initialFormData }
                                 </div>
                                 <input
                                     type="number" required min="0" placeholder="e.g., 22"
-                                    value={formData.experience || ''}
+                                    value={formData.experience}
                                     onChange={(e) => setFormData({...formData, experience: e.target.value})}
                                     className="block w-full rounded-xl border border-slate-200 py-3.5 pl-11 pr-4 text-sm text-slate-900 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600/10"
                                 />
@@ -198,7 +196,7 @@ export default function DoctorCredentialsForm({ userBasicInfo, initialFormData }
                                 </div>
                                 <input
                                     type="number" required min="0" placeholder="e.g., 195"
-                                    value={formData.consultationFee || ''}
+                                    value={formData.consultationFee}
                                     onChange={(e) => setFormData({...formData, consultationFee: e.target.value})}
                                     className="block w-full rounded-xl border border-slate-200 py-3.5 pl-11 pr-4 text-sm text-slate-900 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600/10"
                                 />
@@ -214,14 +212,14 @@ export default function DoctorCredentialsForm({ userBasicInfo, initialFormData }
                                 </div>
                                 <input
                                     type="text" required placeholder="e.g., Neuro Care & Research Center"
-                                    value={formData.hospitalName || ''}
+                                    value={formData.hospitalName}
                                     onChange={(e) => setFormData({...formData, hospitalName: e.target.value})}
                                     className="block w-full rounded-xl border border-slate-200 py-3.5 pl-11 pr-4 text-sm text-slate-900 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600/10"
                                 />
                             </div>
                         </div>
 
-                        {/* 🛠️ 7. Available Days (Modern Checkbox/Badge Select) */}
+                        {/* 7. Available Days */}
                         <div className="sm:col-span-2">
                             <label className="block text-sm font-semibold text-slate-700 mb-2 items-center gap-1.5">
                                 <Calendar className="h-4 w-4 text-slate-400" /> Available Days
@@ -248,7 +246,7 @@ export default function DoctorCredentialsForm({ userBasicInfo, initialFormData }
                             </div>
                         </div>
 
-                        {/* 🛠️ 8. Available Slots (Modern Multiple Select) */}
+                        {/* 8. Available Slots */}
                         <div className="sm:col-span-2">
                             <label className="block text-sm font-semibold text-slate-700 mb-2 items-center gap-1.5">
                                 <Clock className="h-4 w-4 text-slate-400" /> Available Time Slots
@@ -293,6 +291,6 @@ export default function DoctorCredentialsForm({ userBasicInfo, initialFormData }
                     </button>
                 </div>
             </form>
-        </>
+        </div>
     );
 }

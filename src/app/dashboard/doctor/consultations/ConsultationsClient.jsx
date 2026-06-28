@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-hot-toast';
-import { Calendar, Clock, CheckCircle2, XCircle, FileText, RefreshCw, AlertCircle } from 'lucide-react';
+import { Calendar, Clock, CheckCircle2, XCircle, Stethoscope, RefreshCw, AlertCircle } from 'lucide-react';
 
 export default function ConsultationsClient({ initialAppointments, doctorEmail }) {
     const [appointments, setAppointments] = useState(initialAppointments || []);
@@ -23,22 +23,11 @@ export default function ConsultationsClient({ initialAppointments, doctorEmail }
             const data = await response.json();
 
             if (data.success) {
-                // ১. লোকাল স্টেট সাথে সাথে আপডেট করছি
                 setAppointments(prev => 
                     prev.map(app => app._id === appointmentId ? { ...app, appointmentStatus: newStatus } : app)
                 );
-
-                if (newStatus === 'completed') {
-                    toast.success("Marked as completed! Opening prescription desk...");
-                    
-                    // ২. ডক্টরকে সরাসরি প্রেসক্রিপশন পেজে রিডাইরেক্ট করা হচ্ছে আইডি সহ
-                    setTimeout(() => {
-                        router.push(`/dashboard/doctor/prescription?appointmentId=${appointmentId}`);
-                    }, 800);
-                } else {
-                    toast.success(`Appointment successfully ${newStatus}!`);
-                    router.refresh(); 
-                }
+                toast.success(`Appointment successfully ${newStatus}!`);
+                router.refresh(); 
             } else {
                 toast.error(data.message || "Failed to update status.");
             }
@@ -49,6 +38,19 @@ export default function ConsultationsClient({ initialAppointments, doctorEmail }
             setActionLoadingId(null);
         }
     };
+
+// 🎯 ডক্টরকে প্রেসক্রিপশন ডেস্কে পাঠানোর ফাংশন (ফিক্সড লোডিং বাগ)
+const handleRedirectToPrescribe = (appointmentId, patientId) => {
+    // টোস্ট আইডিটি একটি ভ্যারিয়েবলে স্টোর করে রাখা হলো
+    const loadingToastId = toast.loading("Opening prescription desk...");
+    
+    setTimeout(() => {
+        // রিডাইরেক্ট হওয়ার ঠিক আগে টোস্টটি ক্লোজ/ডিসমিস করে দেওয়া হলো
+        toast.dismiss(loadingToastId);
+        
+        router.push(`/dashboard/doctor/prescription?appointmentId=${appointmentId}&patientId=${patientId}`);
+    }, 600);
+};
 
     if (appointments.length === 0) {
         return (
@@ -70,6 +72,7 @@ export default function ConsultationsClient({ initialAppointments, doctorEmail }
                 const isLoading = actionLoadingId === appointment._id;
 
                 const patientName = appointment.patientInfo?.name || "Anonymous Patient";
+                const patientId = appointment.patientId || appointment.patientInfo?._id || "";
 
                 return (
                     <div 
@@ -116,12 +119,12 @@ export default function ConsultationsClient({ initialAppointments, doctorEmail }
                                     </div>
                                 ) : (
                                     <>
-                                        {/* PENDING: ACCEPT / REJECT BUTTONS */}
+                                        {/* PENDING ACTIONS */}
                                         {isPending && (
                                             <div className="flex items-center gap-2 w-full md:justify-end">
                                                 <button
                                                     onClick={() => updateAppointmentStatus(appointment._id, 'confirmed')}
-                                                    className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-emerald-600 px-4 py-2 text-xs font-semibold text-white shadow-sm hover:bg-emerald-700 transition"
+                                                    className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-blue-600 px-4 py-2 text-xs font-semibold text-white shadow-sm hover:bg-blue-700 transition"
                                                 >
                                                     Accept Link
                                                 </button>
@@ -134,21 +137,20 @@ export default function ConsultationsClient({ initialAppointments, doctorEmail }
                                             </div>
                                         )}
 
-                                        {/* CONFIRMED: COMPLETE & PRESCRIBE BUTTON */}
+                                        {/* 🎯 CONFIRMED ACTIONS: NOW PRESCRIBE BUTTON */}
                                         {isConfirmed && (
                                             <button
-                                                onClick={() => updateAppointmentStatus(appointment._id, 'completed')}
-                                                className="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-2.5 text-xs font-bold text-white shadow hover:bg-blue-700 transition w-full md:w-auto"
+                                                onClick={() => handleRedirectToPrescribe(appointment._id, patientId)}
+                                                className="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-600 px-5 py-2.5 text-xs font-bold text-white shadow hover:bg-emerald-700 transition w-full md:w-auto"
                                             >
-                                                <FileText className="h-3.5 w-3.5" /> Mark Completed
+                                                <Stethoscope className="h-3.5 w-3.5" /> Now Prescribe
                                             </button>
                                         )}
 
-                                        {/* 💡 FINAL STATUS BADGES (ইনস্পায়ার্ড ডিজাইন আপডেট) */}
+                                        {/* FINAL BADGES */}
                                         {isCompleted && (
                                             <div className="inline-flex items-center gap-2 rounded-xl bg-emerald-50 px-3.5 py-2 text-xs font-bold text-emerald-700 border border-emerald-200 shadow-sm">
-                                                <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                                                <CheckCircle2 className="h-3.5 w-3.5" /> COMPLETED & PRESCRIBED
+                                                <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" /> COMPLETED & PRESCRIBED
                                             </div>
                                         )}
 
@@ -156,18 +158,6 @@ export default function ConsultationsClient({ initialAppointments, doctorEmail }
                                             <div className="inline-flex items-center gap-1.5 rounded-xl bg-red-50 px-3.5 py-2 text-xs font-bold text-red-700 border border-red-200">
                                                 <XCircle className="h-3.5 w-3.5" /> CANCELLED
                                             </div>
-                                        )}
-
-                                        {/* MINI STATE TRACKER FOR LOGS */}
-                                        {isPending && (
-                                            <span className="text-[10px] font-bold text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-2 py-0.5 tracking-wider uppercase">
-                                                Pending Request
-                                            </span>
-                                        )}
-                                        {isConfirmed && (
-                                            <span className="text-[10px] font-bold text-blue-700 bg-blue-50 border border-blue-200 rounded-lg px-2 py-0.5 tracking-wider uppercase">
-                                                Confirmed Session
-                                            </span>
                                         )}
                                     </>
                                 )}

@@ -37,7 +37,7 @@ export async function DashboardSidebar() {
     const doctorNavLinks = [
         { icon: House, href: "/dashboard/doctor", label: "Overview" },
         { icon: Calendar, href: "/dashboard/doctor/schedules", label: "Manage Schedules" },
-        { icon: Stethoscope, href: "/dashboard/doctor/consultations", label: "Consultations" },
+        { icon: Stethoscope, href: "/dashboard/doctor/consultations", label: "Consultate Appointments" },
         { icon: Person, href: "/dashboard/doctor/prescription", label: "Prescription" },
         { icon: Gear, href: "/dashboard/doctor/credentials", label: "Profile Credentials" },
     ];

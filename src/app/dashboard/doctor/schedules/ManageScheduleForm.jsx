@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { Plus, Trash2, Calendar, Clock, RefreshCw, Save } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 const DAYS_POOL = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 
@@ -21,6 +22,7 @@ const SLOTS_POOL = [
 
 export default function ManageScheduleForm({ initialSchedule }) {
     const [loading, setLoading] = useState(false);
+    const router = useRouter();
     
     // ডাইনামিক অ্যারে স্টেট ম্যানেজমেন্ট (initialSchedule থেকে আসা ডাটা সরাসরি সেভ হবে)
     const [selectedDays, setSelectedDays] = useState(initialSchedule?.availableDays || []);
@@ -85,6 +87,7 @@ export default function ManageScheduleForm({ initialSchedule }) {
             const result = await response.json();
             if (result.success) {
                 toast.success(result.message);
+                router.refresh();
             } else {
                 toast.error(result.message || "Something went wrong");
             }

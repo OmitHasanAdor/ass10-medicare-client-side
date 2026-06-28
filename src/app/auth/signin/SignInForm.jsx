@@ -45,7 +45,7 @@ export default function SignInForm({ redirectTo = "/" }) {
         }
     };
 
-    const handleSignIn = async (e) => {
+   const handleSignIn = async (e) => {
         e.preventDefault();
         setError("");
         setSuccess("");
@@ -57,38 +57,54 @@ export default function SignInForm({ redirectTo = "/" }) {
 
         setIsLoading(true);
 
-        let dynamicRole = "patient";
-        if (email.trim() === "admin@medicare.com") {
-            dynamicRole = "admin";
-        } else if (email.trim() === "amanda.ross@medicare.com") {
-            dynamicRole = "doctor";
-        }
-
         try {
-            const { error: authError } = await signIn.email({
+            // 💡 Better Auth-এর বিল্ট-ইন onSuccess প্রোপার্টি ব্যবহার করে সেশন হ্যান্ডেল করা
+            await signIn.email({
                 email: email.trim(),
                 password: password,
-                role: dynamicRole
+            }, {
+                onSuccess: async () => {
+                    try {
+                        // ১. সেশন সেট হওয়া নিশ্চিত করার পর আপনার ব্যাকএন্ড থেকে রোল ফেস করা
+                        const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/user-role?email=${email.trim()}`);
+                        
+                        if (!response.ok) {
+                            setError("Failed to verify user profile setup.");
+                            setIsLoading(false);
+                            return;
+                        }
+
+                        const userProfile = await response.json();
+                        const realRole = userProfile?.role || "patient";
+
+                        setSuccess(`Authorized successfully as ${realRole}!`);
+
+                        // ২. সঠিক ড্যাশবোর্ড রুটে রিডাইরেক্ট করা
+                        const destination = realRole === "admin" 
+                            ? "/dashboard/admin" 
+                            : realRole === "doctor" 
+                                ? "/dashboard/doctor" 
+                                : "/dashboard/patient";
+
+                        // ৩. রিফ্রেশসহ পুশ করা যাতে সার্ভার কম্পোনেন্ট সেশনটি ইনস্ট্যান্ট রিড করতে পারে
+                        router.push(destination);
+                        router.refresh();
+                        
+                    } catch (fetchErr) {
+                        console.error(fetchErr);
+                        setError("Failed to fetch role permissions from server.");
+                        setIsLoading(false);
+                    }
+                },
+                onError: (ctx) => {
+                    setError(ctx.error.message || "Invalid credentials provided.");
+                    setIsLoading(false);
+                }
             });
 
-            if (authError) {
-                setError(authError.message || "Invalid email or password.");
-                return;
-            }
-
-            setSuccess(`Logged in successfully as ${dynamicRole}!`);
-
-            const destination = dynamicRole === "patient"
-                ? "/dashboard/patient"
-                : dynamicRole === "doctor"
-                    ? "/dashboard/doctor"
-                    : "/dashboard/admin";
-
-            router.push(destination);
         } catch (err) {
             console.error(err);
-            setError("An unexpected network error occurred.");
-        } finally {
+            setError("An unexpected network fault occurred.");
             setIsLoading(false);
         }
     };

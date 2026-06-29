@@ -48,7 +48,7 @@ const Banner = () => {
             {/* CTA */}
             <div className="mt-8">
               <Link
-                href="/doctors"
+                href="/find-doctors"
                 className="inline-flex w-full sm:w-auto justify-center items-center gap-3 px-8 py-4 rounded-2xl bg-blue-600 text-white font-semibold hover:bg-blue-700 transition-all duration-300 shadow-lg"
               >
                 <Search size={20} />

@@ -48,14 +48,14 @@ const Footer = () => {
                             </li>
 
                             <li>
-                                <Link href="/doctors" className="hover:text-blue-400 transition">
+                                <Link href="/find-doctors" className="hover:text-blue-400 transition">
                                     Find Doctors
                                 </Link>
                             </li>
 
                             <li>
                                 <Link
-                                    href="/appointments"
+                                    href="/"
                                     className="hover:text-blue-400 transition"
                                 >
                                     Appointments
@@ -123,14 +123,14 @@ const Footer = () => {
                         {/* Social Links */}
                         <div className="flex gap-3 mt-6">
                             <Link
-                                href="#"
+                                href="/"
                                 className="bg-slate-800 hover:bg-blue-600 transition p-3 rounded-xl"
                             >
                                 <FaFacebookF size={20} />
                             </Link>
 
                             <Link
-                                href="#"
+                                href="/"
                                 className="bg-slate-800 hover:bg-blue-600 transition p-3 rounded-xl"
                             >
 
@@ -140,14 +140,14 @@ const Footer = () => {
                             </Link>
 
                             <Link
-                                href="#"
+                                href="/"
                                 className="bg-slate-800 hover:bg-blue-600 transition p-3 rounded-xl"
                             >
                                 <FaTwitter size={20} />
                             </Link>
 
                             <Link
-                                href="#"
+                                href="/"
                                 className="bg-slate-800 hover:bg-blue-600 transition p-3 rounded-xl"
                             >
                                 <FaInstagram size={20} />
@@ -165,11 +165,11 @@ const Footer = () => {
                     </p>
 
                     <div className="flex gap-6 text-slate-500">
-                        <Link href="/privacy-policy" className="hover:text-blue-400">
+                        <Link href="/" className="hover:text-blue-400">
                             Privacy Policy
                         </Link>
 
-                        <Link href="/terms" className="hover:text-blue-400">
+                        <Link href="/" className="hover:text-blue-400">
                             Terms of Service
                         </Link>
                     </div>

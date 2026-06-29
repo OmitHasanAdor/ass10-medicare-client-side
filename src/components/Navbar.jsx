@@ -33,7 +33,7 @@ const Navbar = async () => {
   // 👑 রোল অনুযায়ী ড্যাশবোর্ড পাথ নির্ধারণ (ডিফল্ট হিসেবে রোল না থাকলে /dashboard এ যাবে)
   const dashboardHref = fullUserData?.role 
     ? `/dashboard/${fullUserData.role.toLowerCase()}` 
-    : "/dashboard";
+    : "/dashboard/patient";
 
   const navLinks = [
     { name: "Home", href: "/" },

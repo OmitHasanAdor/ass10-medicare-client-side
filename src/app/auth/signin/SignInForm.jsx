@@ -32,9 +32,9 @@ export default function SignInForm({ redirectTo = "/" }) {
     const toggleVisibility = () => setIsVisible((prev) => !prev);
 
     const demoCredentials = {
-        admin: { email: "admin@medicare.com", password: "AdminPassword123!" },
-        doctor: { email: "amanda.ross@medicare.com", password: "DoctorPassword123!" },
-        patient: { email: "sarah@example.com", password: "PatientPassword123!" }
+        admin: { email: "admin@admin.com", password: "Shams@2.0" },
+        doctor: { email: "doctor@doctor.com", password: "Shams@2.0" },
+        patient: { email: "patient@patient.com", password: "Shams@2.0" }
     };
 
     const handleQuickFill = (roleType) => {

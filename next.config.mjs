@@ -3,6 +3,8 @@ const nextConfig = {
   /* config options here */
   reactCompiler: true,
   images: {
+    dangerouslyAllowSVG: true, 
+    contentDispositionType: 'attachment',
     remotePatterns: [
       {
         protocol: 'https',

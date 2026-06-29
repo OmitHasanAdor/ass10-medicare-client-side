@@ -54,7 +54,7 @@ const PatientReviewsClient = ({ initialReviews, doctors, patientId }) => {
     const handleUpdateReview = async (e) => {
         e.preventDefault();
         try {
-            const res = await fetch(`http://localhost:5000/api/reviews/update/${activeReview._id}`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/reviews/update/${activeReview._id}`, {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ rating, reviewText }),
@@ -71,7 +71,7 @@ const PatientReviewsClient = ({ initialReviews, doctors, patientId }) => {
     // ❌ Action: Delete Review
     const handleDelete = async () => {
         try {
-            const res = await fetch(`http://localhost:5000/api/reviews/delete/${activeReview._id}`, { method: "DELETE" });
+            const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/reviews/delete/${activeReview._id}`, { method: "DELETE" });
             if (res.ok) {
                 setReviews(reviews.filter(r => r._id !== activeReview._id));
                 closeModal();

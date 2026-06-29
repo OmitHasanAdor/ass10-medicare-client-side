@@ -17,7 +17,7 @@ export default async function PatientDashboardPage() {
 
     try {
         // নতুন তৈরি করা এক্সপ্রেস এপিআই-তে সিঙ্গেল হিট করা
-        const response = await fetch(`http://localhost:5000/patient-dashboard-data?email=${session.user.email}`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/patient-dashboard-data?email=${session.user.email}`, {
             cache: "no-store"
         });
 

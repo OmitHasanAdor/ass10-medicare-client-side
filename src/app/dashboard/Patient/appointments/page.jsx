@@ -1,6 +1,7 @@
 import { getUserSession } from "@/lib/core/session"; // আপনার সেশন মেকানিজম অনুযায়ী
 import AppointmentsListClient from "./AppointmentsListClient";
 
+export const dynamic = "force-dynamic";
 
 export const metadata = {
   title: "My Appointments - MediCare Connect",
@@ -14,7 +15,7 @@ const PatientAppointmentsPage = async () => {
   let appointments = [];
   if (patientId) {
     try {
-      const res = await fetch(`http://localhost:5000/api/appointments/patient/${patientId}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/appointments/patient/${patientId}`, {
         cache: "no-store",
       });
       if (res.ok) {

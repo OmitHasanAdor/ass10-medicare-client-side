@@ -78,7 +78,7 @@ export default function ManageScheduleForm({ initialSchedule }) {
         };
 
         try {
-            const response = await fetch('http://localhost:5000/api/doctor/update-schedule', {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/doctor/update-schedule`, {
                 method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)

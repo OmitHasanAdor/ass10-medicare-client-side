@@ -12,7 +12,7 @@ export async function DashboardSidebar() {
     // 🌟 সেশন থেকে ইমেইল নিয়ে ব্যাকএন্ড থেকে ডাইনামিক রোল তুলে আনা
     if (user?.email) {
         try {
-            const response = await fetch(`http://localhost:5000/user-role?email=${user.email}`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/user-role?email=${user.email}`, {
                 cache: "no-store" // প্রতিবার লেটেস্ট রোল চেক করার জন্য
             });
             if (response.ok) {

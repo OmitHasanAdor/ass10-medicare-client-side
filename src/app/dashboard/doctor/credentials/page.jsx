@@ -3,11 +3,11 @@ import DoctorCredentialsForm from './DoctorCredentialsForm';
 
 async function getDoctorData(email) {
     if (!email) return { userData: null, doctorData: null };
-    
+
     try {
         const [userRes, doctorRes] = await Promise.all([
-            fetch(`http://localhost:5000/user-role?email=${email}`, { cache: 'no-store' }),
-            fetch(`http://localhost:5000/api/doctor-profile?email=${email}`, { cache: 'no-store' })
+            fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/user-role?email=${email}`, { cache: 'no-store' }),
+            fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/doctor-profile?email=${email}`, { cache: 'no-store' })
         ]);
 
         const userData = userRes.ok ? await userRes.json() : null;
@@ -21,9 +21,9 @@ async function getDoctorData(email) {
 }
 
 export default async function DoctorCredentialsPage({ searchParams }) {
-    const resolvedSearchParams = await searchParams; 
-    const email = resolvedSearchParams?.email || "doctor@doctor.com"; 
-    
+    const resolvedSearchParams = await searchParams;
+    const email = resolvedSearchParams?.email || "doctor@doctor.com";
+
     const { userData, doctorData } = await getDoctorData(email);
 
     // usersCollection থেকে আসা একদম বেসিক কিছু ডাটা যা টপ ব্যানারে জাস্ট দেখানোর জন্য লাগবে
@@ -42,11 +42,11 @@ export default async function DoctorCredentialsPage({ searchParams }) {
         experience: doctorData?.experience || '',
         consultationFee: doctorData?.consultationFee || '',
         hospitalName: doctorData?.hospitalName || '',
-        availableDays: Array.isArray(doctorData?.availableDays) 
-            ? doctorData?.availableDays.join(', ') 
+        availableDays: Array.isArray(doctorData?.availableDays)
+            ? doctorData?.availableDays.join(', ')
             : '',
-        availableSlots: Array.isArray(doctorData?.availableSlots) 
-            ? doctorData?.availableSlots.join(', ') 
+        availableSlots: Array.isArray(doctorData?.availableSlots)
+            ? doctorData?.availableSlots.join(', ')
             : ''
     };
 
@@ -59,9 +59,10 @@ export default async function DoctorCredentialsPage({ searchParams }) {
                 </p>
             </div>
 
-            <DoctorCredentialsForm 
-                userBasicInfo={userBasicInfo} 
-                initialFormData={initialFormData} 
+            <DoctorCredentialsForm
+                key={userBasicInfo?.email || "doctor-form"}
+                userBasicInfo={userBasicInfo}
+                initialFormData={initialFormData}
             />
         </div>
     );

@@ -13,7 +13,7 @@ const PatientPaymentsPage = async () => {
   let payments = [];
   if (patientId) {
     try {
-      const res = await fetch(`http://localhost:5000/api/payments/patient/${patientId}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/payments/patient/${patientId}`, {
         cache: "no-store", // রিয়েল-টাইম ডাটা নিশ্চিত করতে ক্যাশ বন্ধ রাখা হয়েছে
       });
       if (res.ok) {

@@ -5,7 +5,7 @@ import ManageScheduleForm from './ManageScheduleForm';
 async function getDoctorSchedule(email) {
     if (!email) return null;
     try {
-        const response = await fetch(`http://localhost:5000/api/doctor-profile?email=${email}`, { cache: 'no-store' });
+        const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/doctor-profile?email=${email}`, { cache: 'no-store' });
         return response.ok ? await response.json() : null;
     } catch (error) {
         console.error("Error fetching doctor profile for schedule:", error);

@@ -2,6 +2,8 @@
 import React from 'react';
 import PrescriptionsClient from './PrescriptionsClient';
 
+export const dynamic = "force-dynamic";
+
 async function fetchFromBackend(endpoint) {
     try {
         const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}${endpoint}`, {

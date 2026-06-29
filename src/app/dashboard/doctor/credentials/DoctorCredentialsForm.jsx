@@ -1,7 +1,10 @@
 "use client"
 import React, { useState } from 'react';
 import { toast } from 'react-hot-toast';
-import { Briefcase, GraduationCap, DollarSign, Clock, Save, RefreshCw, User, Shield, Building, Calendar, Check } from 'lucide-react';
+import { Briefcase, GraduationCap, DollarSign, Clock, Save, RefreshCw, User, Shield, Building, Calendar, Check, Camera } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { authClient } from '@/lib/auth-client';
+
 
 const DAYS_OPTIONS = ["Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
 
@@ -14,24 +17,58 @@ const SLOTS_OPTIONS = [
     "07:00 PM - 10:00 PM"
 ];
 
+  const { data: session, isPending, error } = authClient.useSession();
 export default function DoctorCredentialsForm({ userBasicInfo, initialFormData }) {
     const [loading, setLoading] = useState(false);
+    const [uploading, setUploading] = useState(false);
+
+    const router =useRouter()
     
-    // কোনো useEffect লাগবে না, সরাসরি স্টেট ইনিশিয়ালাইজেশন
-    const [formData, setFormData] = useState({
-        doctorName: initialFormData?.doctorName || '',
-        specialization: initialFormData?.specialization || '',
-        qualifications: initialFormData?.qualifications || '',
-        experience: initialFormData?.experience ?? '',
-        consultationFee: initialFormData?.consultationFee ?? '',
-        hospitalName: initialFormData?.hospitalName || '',
-        availableDays: Array.isArray(initialFormData?.availableDays)
-            ? initialFormData.availableDays
-            : (initialFormData?.availableDays ? initialFormData.availableDays.split(',').map(d => d.trim()) : []),
-        availableSlots: Array.isArray(initialFormData?.availableSlots)
-            ? initialFormData.availableSlots
-            : (initialFormData?.availableSlots ? initialFormData.availableSlots.split(',').map(s => s.trim()) : [])
-    });
+    // 🎯 ইমেজ ইউআরএল হ্যান্ডেল করার জন্য স্টেট (ডাটাবেজে যেটা আছে বা ইউজার যেটা নতুন দিবে)
+    const [currentPhoto, setCurrentPhoto] = useState(initialFormData?.profileImage || userBasicInfo?.photo || "https://static.vecteezy.com/vite/assets/photo-masthead-375-BoK_p8LG.webp");
+
+ const [formData, setFormData] = useState({
+    // 🎯 এখানে পরিবর্তন করা হয়েছে:
+    doctorName: initialFormData?.doctorName || initialFormData?.name || userBasicInfo?.name || '',
+    specialization: initialFormData?.specialization || '',
+    qualifications: initialFormData?.qualifications || '',
+    experience: initialFormData?.experience ?? '',
+    consultationFee: initialFormData?.consultationFee ?? '',
+    hospitalName: initialFormData?.hospitalName || '',
+    availableDays: Array.isArray(initialFormData?.availableDays)
+        ? initialFormData.availableDays
+        : (initialFormData?.availableDays ? initialFormData.availableDays.split(',').map(d => d.trim()) : []),
+    availableSlots: Array.isArray(initialFormData?.availableSlots)
+        ? initialFormData.availableSlots
+        : (initialFormData?.availableSlots ? initialFormData.availableSlots.split(',').map(s => s.trim()) : [])
+});
+
+    // 🎯 ইমেজ আপলোড হ্যান্ডলার (ইমেজ স্ট্রিং লিঙ্ক বা ফাইল ক্লাউডিনারি/ব্যাকএন্ডে পাঠাতে)
+    const handleImageChange = async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        setUploading(true);
+        // উদাহরণ: ক্লাউডিনারি বা আপনার আপলোড এপিআই-তে ফাইল পাঠানোর লজিক
+        const imageFormData = new FormData();
+        imageFormData.append("image", file);
+
+        try {
+            // আপনার যদি কোনো ইমেজ আপলোড এপিআই থাকে সেটি এখানে ব্যবহার করবেন
+            // const res = await fetch('YOUR_IMAGE_UPLOAD_API', { method: 'POST', body: imageFormData });
+            // const data = await res.json();
+            // setCurrentPhoto(data.url);
+            
+            // আপাতত ক্লায়েন্ট সাইড প্রিভিউ এর জন্য:
+            const localUrl = URL.createObjectURL(file);
+            setCurrentPhoto(localUrl); 
+            toast.success("Image selected! (Integrate your upload API to save permanently)");
+        } catch (err) {
+            toast.error("Failed to upload image");
+        } finally {
+            setUploading(false);
+        }
+    };
 
     const handleDayToggle = (day) => {
         const currentDays = [...formData.availableDays];
@@ -73,13 +110,13 @@ export default function DoctorCredentialsForm({ userBasicInfo, initialFormData }
             hospitalName: formData.hospitalName,
             availableDays: formData.availableDays,
             availableSlots: formData.availableSlots,
-            profileImage: userBasicInfo?.photo || "",
+            profileImage: currentPhoto, // 👈 স্টেটে থাকা ডাইনামিক ইমেজটি এখন ব্যাকএন্ডে যাবে
             verificationStatus: "Verified",
             rating: 4.8
         };
 
         try {
-            const response = await fetch('http://localhost:5000/api/doctor/save-credentials', {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/doctor/save-credentials`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
@@ -88,6 +125,7 @@ export default function DoctorCredentialsForm({ userBasicInfo, initialFormData }
             const result = await response.json();
             if (result.success) {
                 toast.success(result.message);
+                router.refresh()
             } else {
                 toast.error(result.message || "Something went wrong");
             }
@@ -98,23 +136,27 @@ export default function DoctorCredentialsForm({ userBasicInfo, initialFormData }
         }
     };
 
-    // 💡 ডাটা যখনই আসবে, ফর্ম যেন রিলোভড হয় তার জন্য একটি ইউনিক কী (Key) তৈরি করছি
     const formKey = initialFormData?._id || userBasicInfo?.email || "empty-form";
 
     return (
-        <div key={formKey}> {/* 👈 এখানে key যুক্ত করায় ডাটা আসবামাত্র ফর্ম ভ্যালু আপডেট হবে এবং কোনো ESLint এরর আসবে না */}
-            {/* Top Minimal Banner */}
+        <div key={formKey}>
+            {/* Top Interactive Banner with Image Upload option */}
             <div className="mb-8 overflow-hidden rounded-2xl bg-linear-to-r from-blue-700 to-blue-900 p-6 text-white shadow-md flex items-center gap-6">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img 
-                    src={userBasicInfo?.photo} 
-                    alt="Doctor"
-                    className="h-16 w-16 rounded-xl object-cover border-2 border-white/20 bg-white/10"
-                    onError={(e) => { e.target.src = 'https://static.vecteezy.com/vite/assets/photo-masthead-375-BoK_p8LG.webp'; }}
-                />
+                <div className="relative group cursor-pointer">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img 
+                        src={currentPhoto} 
+                        alt="Doctor"
+                        className="h-20 w-20 rounded-xl object-cover border-2 border-white/20 bg-white/10"
+                    />
+                    <label className="absolute inset-0 bg-black/40 rounded-xl opacity-0 group-hover:opacity-100 flex items-center justify-center transition-all cursor-pointer">
+                        <Camera className="h-5 w-5 text-white" />
+                        <input type="file" accept="image/*" onChange={handleImageChange} className="hidden" />
+                    </label>
+                </div>
                 <div>
-                    <h2 className="text-lg font-bold">Welcome, Doctor!</h2>
-                    <p className="text-blue-200 text-xs">Fill up the complete professional form below.</p>
+                    <h2 className="text-lg font-bold">Welcome, {formData.doctorName || session?.user?.name || 'Doctor'}!</h2>
+                    <p className="text-blue-200 text-xs">Hover over the image to change your profile avatar.</p>
                 </div>
             </div>
 
@@ -221,7 +263,7 @@ export default function DoctorCredentialsForm({ userBasicInfo, initialFormData }
 
                         {/* 7. Available Days */}
                         <div className="sm:col-span-2">
-                            <label className="block text-sm font-semibold text-slate-700 mb-2 items-center gap-1.5">
+                            <label className=" text-sm font-semibold text-slate-700 mb-2 flex items-center gap-1.5">
                                 <Calendar className="h-4 w-4 text-slate-400" /> Available Days
                             </label>
                             <div className="flex flex-wrap gap-2.5 mt-2">
@@ -248,7 +290,7 @@ export default function DoctorCredentialsForm({ userBasicInfo, initialFormData }
 
                         {/* 8. Available Slots */}
                         <div className="sm:col-span-2">
-                            <label className="block text-sm font-semibold text-slate-700 mb-2 items-center gap-1.5">
+                            <label className=" text-sm font-semibold text-slate-700 mb-2 flex items-center gap-1.5">
                                 <Clock className="h-4 w-4 text-slate-400" /> Available Time Slots
                             </label>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2">
@@ -283,7 +325,7 @@ export default function DoctorCredentialsForm({ userBasicInfo, initialFormData }
                 {/* Footer Actions */}
                 <div className="flex items-center justify-end border-t border-slate-100 bg-slate-50/50 px-6 py-4 sm:px-8">
                     <button
-                        type="submit" disabled={loading}
+                        type="submit" disabled={loading || uploading}
                         className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-all hover:bg-blue-700 disabled:opacity-50"
                     >
                         {loading ? <RefreshCw className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}

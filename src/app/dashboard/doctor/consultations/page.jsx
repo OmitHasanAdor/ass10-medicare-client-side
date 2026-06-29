@@ -1,11 +1,18 @@
 // 📂 src/app/dashboard/doctor/consultations/page.jsx
 import React from 'react';
 import ConsultationsClient from './ConsultationsClient';
+import { auth } from '@/lib/auth';
+import { headers } from 'next/headers';
 
-const DOCTOR_EMAIL = "doctor@doctor.com"; 
 
-// ১. এটি একটি সাধারণ হেল্পার ফাংশন যা ডেটা ফেচ করে আনবে
+
+
+
+export const dynamic = "force-dynamic";
+
+
 async function getDoctorAppointments(email) {
+  
     let appointments = []; 
 
     try {
@@ -31,6 +38,11 @@ async function getDoctorAppointments(email) {
 
 // 🎯 ২. এটি মূল পেজ কম্পোনেন্ট যা Next.js-এর নিয়ম অনুযায়ী default export করা হয়েছে
 export default async function DoctorConsultationsPage() {
+   
+        const session = await auth.api.getSession({
+            headers: await headers() // some endpoints might require headers
+        })
+    const DOCTOR_EMAIL = session?.user?.email || "doctor@doctor.com"; 
     // ডেটা ফেচিং ফাংশন কল করে ডাটা আনা হলো
     const appointments = await getDoctorAppointments(DOCTOR_EMAIL);
 

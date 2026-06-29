@@ -33,7 +33,7 @@ const AppointmentsListClient = ({ initialAppointments, patientId }) => {
   const handleCancel = async () => {
     if (!activeAppointment) return;
     try {
-      const res = await fetch(`http://localhost:5000/api/appointments/cancel/${activeAppointment._id}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/appointments/cancel/${activeAppointment._id}`, {
         method: "DELETE",
       });
       if (res.ok) {
@@ -51,7 +51,7 @@ const AppointmentsListClient = ({ initialAppointments, patientId }) => {
     if (!activeAppointment) return;
 
     try {
-      const res = await fetch(`http://localhost:5000/api/appointments/reschedule/${activeAppointment._id}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/appointments/reschedule/${activeAppointment._id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ appointmentDate: newDate, appointmentTime: newTime }),

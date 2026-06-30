@@ -98,7 +98,7 @@ const NotFound = () => {
 
           <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
             <Link
-              href="/doctors"
+              href="/find-doctors"
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-2xl border border-blue-600 px-8 py-4 font-semibold text-blue-600 transition hover:bg-blue-50"
             >
               <Search size={20} />

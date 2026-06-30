@@ -47,13 +47,12 @@ const Banner = () => {
 
             {/* CTA */}
             <div className="mt-8">
-              <Link
-                href="/find-doctors"
-                className="inline-flex w-full sm:w-auto justify-center items-center gap-3 px-8 py-4 rounded-2xl bg-blue-600 text-white font-semibold hover:bg-blue-700 transition-all duration-300 shadow-lg"
-              >
-                <Search size={20} />
-                Find Doctors
-              </Link>
+             <Link
+              href="/"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-2xl bg-blue-600 px-8 py-4 font-semibold text-white shadow-lg transition hover:bg-blue-700"
+            >
+                <Search size={20} /> Find Doctors
+            </Link>
             </div>
 
             {/* Trust Text */}

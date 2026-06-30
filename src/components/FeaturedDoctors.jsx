@@ -7,14 +7,27 @@ import { Stethoscope, Award, DollarSign, ArrowRight } from "lucide-react";
 async function getFeaturedDoctors() {
     try {
         const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/doctors?status=verified`, {
-            next: { revalidate: 3600 } // ISR ক্যাশিং (১ ঘণ্টা পর পর নতুন ডাটা চেক করবে)
+            next: { revalidate: 3600 } // ISR ক্যাশিং
         });
 
         if (!res.ok) throw new Error("Failed to fetch featured doctors");
         const data = await res.json();
         
-        // হোমপেজের গ্রিড সুন্দর রাখার জন্য প্রথম ৪ জন ভেরিফাইড ডক্টর রিটার্ন করবে
-        return data.slice(0, 4);
+        // 🎯 ১. যদি ডাটা সরাসরি অ্যারে হয়
+        if (Array.isArray(data)) {
+            return data.slice(0, 4);
+        }
+        
+        // 🎯 ২. যদি ব্যাকএন্ড থেকে অবজেক্টের ভেতর (যেমন data.doctors বা data.data) অ্যারে পাঠানো হয়
+        if (data && Array.isArray(data.doctors)) {
+            return data.doctors.slice(0, 4);
+        }
+        if (data && Array.isArray(data.data)) {
+            return data.data.slice(0, 4);
+        }
+
+        // যদি কোনো অ্যারে না পাওয়া যায়, তবে খালি অ্যারে রিটার্ন করবে যাতে পেজ ক্র্যাশ না করে
+        return [];
     } catch (error) {
         console.error("Error loading featured doctors:", error);
         return [];

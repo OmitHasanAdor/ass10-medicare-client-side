@@ -37,7 +37,7 @@ export default function PrescriptionsClient({ acceptedAppointments, initialPresc
     const handleModifySetup = (rx) => {
         setEditPrescriptionId(rx._id);
         setEditingPatientName(rx.patientInfo?.name || 'Patient');
-        
+
         // ফর্মে আগের ডেটা পপুলেট করা
         setDiagnosis(rx.diagnosis);
         setMedications(rx.medications);
@@ -145,14 +145,12 @@ export default function PrescriptionsClient({ acceptedAppointments, initialPresc
                                         setEditPrescriptionId(null);
                                         setSelectedAppointment(app);
                                     }}
-                                    className={`px-4 py-2 rounded-lg text-xs font-medium transition ${
-                                        selectedAppointment?._id === app._id
+                                    className={`px-4 py-2 rounded-lg text-xs font-medium transition ${selectedAppointment?._id === app._id
                                             ? 'bg-blue-600 text-white'
                                             : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
-                                    }`}
+                                        }`}
                                 >
-                                    {app.patientInfo?.name || 'Unknown Patient'} (ID: {app._id.slice(-4)})
-                                </button>
+                                    {app.patientInfo?.name || 'Unknown Patient'} (ID: {String(app._id).slice(-4)})                                </button>
                             ))}
                         </div>
                     )}
@@ -167,7 +165,7 @@ export default function PrescriptionsClient({ acceptedAppointments, initialPresc
                             {editPrescriptionId ? '⚙️ Modify Prescription for:' : '📝 Formulate Prescription for:'}{' '}
                             <span className="text-blue-600">{currentPatientName}</span>
                         </h3>
-                        <button 
+                        <button
                             type="button" onClick={handleCancel}
                             className="text-xs bg-gray-100 hover:bg-gray-200 text-gray-600 px-3 py-1 rounded-lg font-medium transition"
                         >
@@ -211,9 +209,8 @@ export default function PrescriptionsClient({ acceptedAppointments, initialPresc
                         </button>
                         <button
                             type="submit" disabled={loading}
-                            className={`text-white font-medium text-sm py-2 px-6 rounded-lg transition ${
-                                editPrescriptionId ? 'bg-amber-600 hover:bg-amber-700' : 'bg-blue-600 hover:bg-blue-700'
-                            }`}
+                            className={`text-white font-medium text-sm py-2 px-6 rounded-lg transition ${editPrescriptionId ? 'bg-amber-600 hover:bg-amber-700' : 'bg-blue-600 hover:bg-blue-700'
+                                }`}
                         >
                             {loading ? 'Processing...' : editPrescriptionId ? 'Save Modifications' : 'Submit & Complete'}
                         </button>
@@ -243,7 +240,7 @@ export default function PrescriptionsClient({ acceptedAppointments, initialPresc
                                         </p>
                                     </div>
                                     {/* 🎯 "Modify Rx" বাটনে onClick হ্যান্ডলার যুক্ত করা হয়েছে */}
-                                    <button 
+                                    <button
                                         onClick={() => handleModifySetup(rx)}
                                         className="border px-3 py-1 rounded-lg text-xs font-medium hover:bg-amber-50 hover:text-amber-700 hover:border-amber-200 text-gray-600 transition"
                                     >

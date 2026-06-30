@@ -3,19 +3,19 @@
 
 import React from "react";
 import Link from "next/link";
-import { 
-  Calendar, 
-  Clock, 
-  DollarSign, 
-  Heart, 
-  ArrowUpRight, 
-  CheckCircle2, 
-  AlertCircle 
+import {
+  Calendar,
+  Clock,
+  DollarSign,
+  Heart,
+  ArrowUpRight,
+  CheckCircle2,
+  AlertCircle
 } from "lucide-react";
 import Image from "next/image";
 
 export default function PatientOverviewClient({ appointments = [], patientName = "Patient" }) {
-  
+
   // ১. আজকের তারিখ বের করা (টাইমজোন ও হাইড্রেশন সেফ রাখার জন্য লোকাল ফরমেট)
   const today = new Date();
   const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
@@ -45,7 +45,7 @@ export default function PatientOverviewClient({ appointments = [], patientName =
 
   return (
     <div className="p-4 md:p-8 max-w-7xl mx-auto space-y-8 bg-gray-50/10 min-h-screen">
-      
+
       {/* 🌟 হেডার সেকশন */}
       <div className="flex flex-col gap-1">
         <h1 className="text-xl md:text-2xl font-bold text-gray-800">Welcome back, {patientName}! ✨</h1>
@@ -54,7 +54,7 @@ export default function PatientOverviewClient({ appointments = [], patientName =
 
       {/* 📊 স্ট্যাটস গ্রিড (Stats Grid) */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        
+
         {/* টোটাল পেমেন্ট */}
         <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex items-center justify-between group hover:border-green-200 transition duration-300">
           <div className="space-y-1">
@@ -92,10 +92,10 @@ export default function PatientOverviewClient({ appointments = [], patientName =
 
       {/* 🔄 মেইন ড্যাশবোর্ড গ্রিড লেআউট */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        
+
         {/* 📋 বাম দিকের ২-কলাম সেকশন (Upcoming & History) */}
         <div className="lg:col-span-2 space-y-8">
-          
+
           {/* Upcoming Appointments */}
           <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 md:p-6 space-y-4">
             <div className="flex justify-between items-center border-b pb-3">
@@ -112,9 +112,9 @@ export default function PatientOverviewClient({ appointments = [], patientName =
                 {upcomingAppointments.map((app) => (
                   <div key={app._id} className="flex flex-col sm:flex-row justify-between items-start sm:items-center p-4 bg-gray-50/60 rounded-xl border border-gray-100 hover:bg-gray-50 transition gap-4">
                     <div className="flex gap-3 items-center">
-                      <Image 
-                        src={app.doctorDetails?.profileImage || "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d"} 
-                        alt="Doctor" 
+                      <Image
+                        src={app.doctorDetails?.profileImage || "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d"}
+                        alt="Doctor"
                         className="w-11 h-11 rounded-full object-cover ring-2 ring-white shadow-sm"
                         width={400}
                         height={400}
@@ -162,18 +162,27 @@ export default function PatientOverviewClient({ appointments = [], patientName =
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-50 text-xs md:text-sm">
-                    {appointmentHistory.slice(0, 5).map((app) => (
-                      <tr key={app._id} className="hover:bg-gray-50/50 transition">
-                        <td className="py-3 font-semibold text-gray-800">{app.doctorDetails?.doctorName || "Doctor"}</td>
-                        <td className="py-3 text-gray-500" suppressHydrationWarning>{app.appointmentDate}</td>
-                        <td className="py-3 text-gray-900 font-bold">${app.amountPaid || 0}</td>
-                        <td className="py-3 text-right">
-                          <span className="inline-block text-[11px] px-2 py-0.5 font-medium bg-green-50 text-green-700 rounded">
-                            Success
-                          </span>
-                        </td>
-                      </tr>
-                    ))}
+                    {/* 🎯 Safe array checking দিয়ে কোডটি সুরক্ষিত করা হলো */}
+                    {(Array.isArray(appointmentHistory) ? appointmentHistory : [])
+                      .slice(0, 5)
+                      .map((app) => (
+                        <tr key={app._id} className="hover:bg-gray-50/50 transition">
+                          <td className="py-3 font-semibold text-gray-800">
+                            {app.doctorDetails?.doctorName || "Doctor"}
+                          </td>
+                          <td className="py-3 text-gray-500" suppressHydrationWarning>
+                            {app.appointmentDate}
+                          </td>
+                          <td className="py-3 text-gray-900 font-bold">
+                            ${app.amountPaid || 0}
+                          </td>
+                          <td className="py-3 text-right">
+                            <span className="inline-block text-[11px] px-2 py-0.5 font-medium bg-green-50 text-green-700 rounded">
+                              Success
+                            </span>
+                          </td>
+                        </tr>
+                      ))}
                   </tbody>
                 </table>
               </div>
@@ -198,10 +207,10 @@ export default function PatientOverviewClient({ appointments = [], patientName =
                 {visitedDoctors.map((doc, idx) => doc && (
                   <div key={doc._id || idx} className="flex items-center justify-between p-3 rounded-xl border border-gray-50 bg-gray-50/30 hover:bg-gray-50 hover:border-gray-100 transition group">
                     <div className="flex gap-3 items-center">
-                      <Image 
-                        src={doc.profileImage || "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d"} 
-                        alt="Doctor" 
-                        className="w-9 h-9 rounded-full object-cover" 
+                      <Image
+                        src={doc.profileImage || "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d"}
+                        alt="Doctor"
+                        className="w-9 h-9 rounded-full object-cover"
                         width={400}
                         height={400}
                       />
@@ -210,8 +219,8 @@ export default function PatientOverviewClient({ appointments = [], patientName =
                         <p className="text-[11px] text-gray-400 font-medium">{doc.specialization || "General"}</p>
                       </div>
                     </div>
-                    <Link 
-                      href={`/find-doctors/${doc._id}`} 
+                    <Link
+                      href={`/find-doctors/${doc._id}`}
                       className="p-1.5 bg-white text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg border border-gray-100 transition shadow-sm"
                     >
                       <ArrowUpRight size={15} />

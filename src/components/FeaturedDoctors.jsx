@@ -72,7 +72,7 @@ export default async function FeaturedDoctors() {
                         {/* ২. ডক্টর ইনফরমেশন */}
                         <div className="p-5 flex flex-col grow justify-between space-y-4">
                             <div className="space-y-1.5">
-                                <h3 className="font-bold text-base text-zinc-900 dark:text-zinc-50 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+                                <h3 className="font-bold text-base text-zinc-900 dark:text-zinc-50 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
                                     {doctor.doctorName}
                                 </h3>
                                 <p className="text-xs text-zinc-400 dark:text-zinc-500 font-medium line-clamp-1">
@@ -87,7 +87,7 @@ export default async function FeaturedDoctors() {
                                         <Award size={14} className="text-zinc-400" /> {doctor.experience} Years Exp
                                     </span>
                                     <span className="flex items-center text-zinc-900 dark:text-zinc-50 bg-zinc-50 dark:bg-zinc-800/50 px-2.5 py-1 rounded-xl border border-zinc-200/40 dark:border-zinc-700/30">
-                                        <DollarSign size={13} className="text-emerald-600 dark:text-emerald-400 -mr-0.5" />
+                                        <DollarSign size={13} className="text-blue-600 dark:text-blue-400 -mr-0.5" />
                                         {doctor.consultationFee} Co-Pay
                                     </span>
                                 </div>

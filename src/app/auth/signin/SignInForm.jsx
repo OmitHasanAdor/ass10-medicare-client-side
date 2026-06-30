@@ -199,21 +199,21 @@ export default function SignInForm({ redirectTo = "/" }) {
                                 onClick={() => handleQuickFill("admin")}
                                 className="text-left hover:underline focus:outline-none text-blue-950 dark:text-zinc-300"
                             >
-                                <span className="font-semibold">Admin:</span> admin@medicare.com <span className="text-zinc-400">(Click to fill)</span>
+                                <span className="font-semibold">Admin:</span> admin@admin.com <span className="text-zinc-400">(Click to fill)</span>
                             </button>
                             <button
                                 type="button"
                                 onClick={() => handleQuickFill("doctor")}
                                 className="text-left hover:underline focus:outline-none text-blue-950 dark:text-zinc-300"
                             >
-                                <span className="font-semibold">Clinician:</span> amanda.ross@medicare.com <span className="text-zinc-400">(Click to fill)</span>
+                                <span className="font-semibold">Clinician:</span> doctor@doctor.com <span className="text-zinc-400">(Click to fill)</span>
                             </button>
                             <button
                                 type="button"
                                 onClick={() => handleQuickFill("patient")}
                                 className="text-left hover:underline focus:outline-none text-blue-950 dark:text-zinc-300"
                             >
-                                <span className="font-semibold">Patient:</span> sarah@example.com <span className="text-zinc-400">(Click to fill)</span>
+                                <span className="font-semibold">Patient:</span> patient@patient.com <span className="text-zinc-400">(Click to fill)</span>
                             </button>
                         </div>
                     </div>

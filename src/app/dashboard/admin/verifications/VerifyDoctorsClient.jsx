@@ -6,9 +6,14 @@ import { CheckCircle2, XCircle, GraduationCap, Building2, Milestone, Stethoscope
 import Image from "next/image";
 
 export default function VerifyDoctorsClient({ initialDoctors }) {
-    const [doctors, setDoctors] = useState(initialDoctors);
+    // সেফটি চেক: যদি initialDoctors কোনো কারণে অ্যারে না হয়, তবে খালি অ্যারে [] সেট হবে
+    const [doctors, setDoctors] = useState(() => {
+        if (Array.isArray(initialDoctors)) return initialDoctors;
+        if (initialDoctors && typeof initialDoctors === "object" && Array.isArray(initialDoctors.doctors)) return initialDoctors.doctors; // আপনার এপিআই যদি অবজেক্ট পাঠায়
+        return [];
+    });
 
-    // স্ট্যাটাস আপডেট করার হ্যান্ডলার (Verify, Cancel, Reject)
+    // স্ট্যাটাস আপডেট করার হ্যান্ডলার
     const handleUpdateStatus = async (doctorId, newStatus) => {
         const confirmMsg = `Are you sure you want to change status to ${newStatus}?`;
         if (!confirm(confirmMsg)) return;
@@ -34,7 +39,8 @@ export default function VerifyDoctorsClient({ initialDoctors }) {
         }
     };
 
-    if (doctors.length === 0) {
+    // যদি কোনো ডক্টর না থাকে বা ডেটা লোড না হয়
+    if (!Array.isArray(doctors) || doctors.length === 0) {
         return (
             <div className="text-center col-span-full py-16 bg-white border border-dashed rounded-2xl p-8 text-gray-400">
                 <Stethoscope className="size-12 mx-auto mb-3 opacity-30 text-blue-600" />
@@ -54,12 +60,12 @@ export default function VerifyDoctorsClient({ initialDoctors }) {
                         key={id}
                         className="bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 shadow-sm rounded-2xl hover:border-blue-500/30 transition-all duration-300"
                     >
-                        {/* 🏷️ কার্ড হেডার: প্রোফাইল ইমেজ, নাম ও ডেজিগনেশন */}
+                        {/* 🏷️ কার্ড হেডার */}
                         <Card.Header className="p-5 pb-3 flex flex-row items-start justify-between gap-4">
                             <div className="flex items-center gap-3">
                                 <Image
                                     src={doctor.profileImage || "https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=150"}
-                                    alt={doctor.doctorName}
+                                    alt={doctor.doctorName || "Doctor"}
                                     className="size-14 rounded-xl object-cover border-2 border-blue-600/10 shrink-0"
                                     width={100}
                                     height={100}
@@ -84,7 +90,7 @@ export default function VerifyDoctorsClient({ initialDoctors }) {
                             </div>
                         </Card.Header>
 
-                        {/* 📊 কার্ড কন্টেন্ট: ক্রেডেনশিয়াল ও ডিটেইলস গ্রিড */}
+                        {/* 📊 কার্ড কন্টেন্ট */}
                         <Card.Content className="px-5 py-0">
                             <div className="grid grid-cols-3 gap-2 bg-zinc-50/70 dark:bg-zinc-950 p-3 rounded-xl border text-xs">
                                 <div className="space-y-0.5">
@@ -108,7 +114,7 @@ export default function VerifyDoctorsClient({ initialDoctors }) {
                             </div>
                         </Card.Content>
 
-                        {/* ⚙️ কার্ড ফুটার: স্ট্যাটাস এবং অ্যাকশন বাটনসমূহ */}
+                        {/* ⚙️ কার্ড ফুটার */}
                         <Card.Footer className="p-5 pt-3 flex items-center justify-between border-t border-zinc-100 dark:border-zinc-800">
                             <div className="flex flex-col gap-0.5">
                                 <span className="text-[9px] uppercase font-black text-zinc-400 tracking-wider">Verification Status</span>
@@ -120,7 +126,6 @@ export default function VerifyDoctorsClient({ initialDoctors }) {
                                 </span>
                             </div>
 
-                            {/* অ্যাকশন বাটন গ্রুপ */}
                             <div className="flex gap-2">
                                 {status !== "Verified" ? (
                                     <button

@@ -1,7 +1,9 @@
 // src/app/dashboard/admin/page.jsx
 
-import DashboardStats from "./DashboardStats";
 import DashboardCharts from "./DashboardCharts";
+import DashboardStats from "./DashboardStats";
+
+
 
 export const dynamic = "force-dynamic";
 

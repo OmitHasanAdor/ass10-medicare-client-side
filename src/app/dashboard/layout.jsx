@@ -1,14 +1,18 @@
+export default function DashboardLayout({ children }) {
+  return (
+    <div style={{ display: "flex" }}>
+      <div
+        style={{
+          width: "250px",
+          background: "red",
+          color: "white",
+          padding: "20px",
+        }}
+      >
+        TEST SIDEBAR
+      </div>
 
-import { DashboardSidebar } from '@/components/DashboardSidebar';
-import React from 'react';
-
-const DasboardLayout = ({children}) => {
-    return (
-           <div className="flex min-h-screen">
-            <DashboardSidebar />
-            <div className="flex-1">{children}</div>
-        </div>
-    );
-};
-
-export default DasboardLayout;
+      <div>{children}</div>
+    </div>
+  );
+}

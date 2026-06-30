@@ -23,49 +23,6 @@ export const auth = betterAuth({
             clientSecret: process.env.GOOGLE_CLIENT_SECRET,
         },
     },
-    // 🔥 Better-Auth এ role ফিল্ডটি ডিফাইন করে দেওয়া যেন এটি 'user' কালেকশনেও সেভ হয়
-    user: {
-        additionalFields: {
-            role: {
-                type: "string",
-                required: false,
-                defaultValue: "patient"
-            }
-        }
-    },
-    // 🔥 এখানে নতুন হুকটি পেস্ট করা হয়েছে
-    databaseHooks: {
-        user: {
-            create: {
-                before: async (user) => {
-                    return { 
-                        ...user, 
-                        role: user.role || "patient" 
-                    };
-                },
-                // Better-Auth এ ইউজার তৈরি হওয়ার পর কাস্টম 'users' কালেকশনেও ডাটা কপি হবে
-                after: async (user) => {
-                    const customUsersCollection = db.collection("users");
-                    
-                    // চেক করে দেখা যে কাস্টম কালেকশনে এই ইমেইল অলরেডি আছে কিনা
-                    const existingCustomUser = await customUsersCollection.findOne({ email: user.email });
-                    
-                    if (!existingCustomUser) {
-                        await customUsersCollection.insertOne({
-                            name: user.name,
-                            email: user.email,
-                            phone: "", 
-                            gender: "unknown", 
-                            photo: user.image || "",
-                            role: user.role || "patient",
-                            status: "active",
-                            createdAt: new Date().toISOString()
-                        });
-                    }
-                }
-            },
-        },
-    },
     session: {
         cookieCache: {
             enabled: true,

@@ -4,6 +4,12 @@ import Link from 'next/link';
 import { headers } from "next/headers";
 import { auth } from '@/lib/auth';
 
+export const metadata = {
+    title: "Doctor Dashboard | MediCare Connect",
+    description: "Manage your medical practice, appointments, schedules, and patient consultations from your professional dashboard.",
+    keywords: ["Doctor Dashboard", "Medical Practice", "Healthcare Portal", "Doctor Panel"],
+};
+
 export default async function DoctorDashboardPage() {
   const session = await auth.api.getSession({
     headers: await headers(),

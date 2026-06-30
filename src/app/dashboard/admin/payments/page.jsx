@@ -1,5 +1,13 @@
 import ManagePaymentsClient from "./ManagePaymentsClient";
 
+export const dynamic = "force-dynamic";
+
+export const metadata = {
+    title: "Stripe Cash Flows | MediCare Connect",
+    description: "Track payment transactions, consultation revenues, refunds, and Stripe-powered financial activities securely.",
+    keywords: ["Stripe Payments", "Revenue", "Payment Management", "Healthcare Finance"],
+};
+
 async function getPaymentsFromExpress() {
   try {
     // আপনার এক্সপ্রেস ব্যাকএন্ডের URL (যেমন: http://localhost:5000) এনভায়রনমেন্ট ভ্যারিয়েবল থেকে নিন

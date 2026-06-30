@@ -5,11 +5,12 @@ import { auth } from '@/lib/auth';
 import { headers } from 'next/headers';
 
 
-
-
-
 export const dynamic = "force-dynamic";
-
+export const metadata = {
+    title: "Consultation Appointments | MediCare Connect",
+    description: "View and manage patient consultation appointments, visit history, and treatment sessions efficiently.",
+    keywords: ["Consultation", "Patient Appointments", "Doctor Visits", "Medical Consultation"],
+};
 
 async function getDoctorAppointments(email) {
   

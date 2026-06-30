@@ -3,7 +3,9 @@ import PatientPaymentsClient from "./PatientPaymentsClient";
 
 
 export const metadata = {
-  title: "Billing & Payments - MediCare Connect",
+    title: "Billing & Payments | MediCare Connect",
+    description: "Securely manage consultation fees, billing history, payment records, and online healthcare transactions.",
+    keywords: ["Billing", "Payments", "Medical Payments", "Consultation Fees", "Healthcare Billing"],
 };
 
 const PatientPaymentsPage = async () => {

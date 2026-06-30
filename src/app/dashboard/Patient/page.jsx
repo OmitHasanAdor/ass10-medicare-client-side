@@ -3,6 +3,12 @@ import { auth } from "@/lib/auth";
 import PatientOverviewClient from "./PatientOverviewClient";
 import { headers } from "next/headers";
 
+export const metadata = {
+    title: "Patient Dashboard | MediCare Connect",
+    description: "Access your personal healthcare dashboard to monitor appointments, medical activities, and healthcare services in one place.",
+    keywords: ["Patient Dashboard", "Healthcare Dashboard", "Medical Portal", "MediCare Connect"],
+};
+
 export default async function PatientDashboardPage() {
     const session = await auth.api.getSession({
         headers: await headers(),

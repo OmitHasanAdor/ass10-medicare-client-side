@@ -4,6 +4,23 @@ import { notFound } from "next/navigation";
 import { headers } from "next/headers";
 import { auth } from "@/lib/auth"; // আপনার Better Auth কনফিগ ফাইলের পাথ
 
+export async function generateMetadata({ params }) {
+  const { id } = await params;
+  const doctor = await getDoctorDetails(id);
+
+  if (!doctor) {
+    return {
+      title: "Doctor Not Found | MediCare Connect",
+      description: "The requested doctor profile could not be found.",
+    };
+  }
+
+  return {
+    title: `${doctor.doctorName} | ${doctor.specialization} | MediCare Connect`,
+    description: `Book an appointment with ${doctor.doctorName}, a verified ${doctor.specialization} at ${doctor.hospitalName}. View qualifications, consultation fee, experience, availability, and schedule your appointment through MediCare Connect.`,
+  };
+}
+
 // 🔍 এক্সপ্রেস ব্যাকএন্ড থেকে নির্দিষ্ট ডক্টরের ডেটা ফেচ করা
 async function getDoctorDetails(id) {
   try {

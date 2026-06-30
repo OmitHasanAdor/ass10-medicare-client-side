@@ -2,6 +2,14 @@
 
 import VerifyDoctorsClient from "./VerifyDoctorsClient";
 
+export const dynamic = "force-dynamic";
+
+export const metadata = {
+    title: "Verify Doctors | MediCare Connect",
+    description: "Review doctor credentials, approve verification requests, and maintain trusted healthcare professionals on the platform.",
+    keywords: ["Doctor Verification", "Medical Credentials", "Admin Verification", "Verified Doctors"],
+};
+
 async function getDoctorsForVerification() {
   try {
     // আমাদের নতুন এক্সপ্রেস এপিআই এন্ডপয়েন্ট কল করা হলো

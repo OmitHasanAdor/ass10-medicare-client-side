@@ -2,6 +2,12 @@
 import React from 'react';
 import ManageScheduleForm from './ManageScheduleForm';
 
+export const metadata = {
+    title: "Manage Schedules | MediCare Connect",
+    description: "Update your consultation availability, clinic schedules, and appointment time slots for patients.",
+    keywords: ["Doctor Schedule", "Availability", "Appointment Slots", "Clinic Schedule"],
+};
+
 async function getDoctorSchedule(email) {
     if (!email) return null;
     try {

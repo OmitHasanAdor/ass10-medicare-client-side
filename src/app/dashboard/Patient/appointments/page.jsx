@@ -4,7 +4,9 @@ import AppointmentsListClient from "./AppointmentsListClient";
 export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "My Appointments - MediCare Connect",
+    title: "My Appointments | MediCare Connect",
+    description: "View, manage, and track your upcoming, completed, and cancelled medical appointments with verified doctors.",
+    keywords: ["Appointments", "Medical Booking", "Doctor Appointments", "Patient Schedule"],
 };
 
 const PatientAppointmentsPage = async () => {

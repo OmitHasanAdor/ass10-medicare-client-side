@@ -4,6 +4,12 @@ import PrescriptionsClient from './PrescriptionsClient';
 
 export const dynamic = "force-dynamic";
 
+export const metadata = {
+    title: "Prescription Management | MediCare Connect",
+    description: "Create, manage, and maintain digital prescriptions for patients during medical consultations.",
+    keywords: ["Prescription", "Digital Prescription", "Medical Records", "Patient Treatment"],
+};
+
 async function fetchFromBackend(endpoint) {
     try {
         const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}${endpoint}`, {

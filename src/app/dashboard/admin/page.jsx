@@ -3,6 +3,14 @@
 import DashboardStats from "./DashboardStats";
 import DashboardCharts from "./DashboardCharts";
 
+export const dynamic = "force-dynamic";
+
+export const metadata = {
+    title: "Ecosystem Analytics | MediCare Connect",
+    description: "Monitor platform performance, healthcare activities, user growth, and operational insights from the admin dashboard.",
+    keywords: ["Admin Dashboard", "Healthcare Analytics", "Platform Statistics", "MediCare Connect"],
+};
+
 // সার্ভার সাইড ডেটা ফেচিং ফাংশন
 async function getAnalyticsData() {
     try {

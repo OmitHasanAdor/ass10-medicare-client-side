@@ -1,5 +1,13 @@
 import ManageUsersClient from "./ManageUsersClient";
 
+export const dynamic = "force-dynamic";
+
+export const metadata = {
+    title: "Manage Users | MediCare Connect",
+    description: "View, manage, and oversee patient, doctor, and administrator accounts across the healthcare platform.",
+    keywords: ["Manage Users", "Patient Management", "Doctor Management", "Admin Panel"],
+};
+
 // ১. সার্ভার সাইড ডাটা ফেচিং ফাংশন
 async function getUsers() {
     try {

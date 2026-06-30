@@ -2,7 +2,9 @@ import { getUserSession } from "@/lib/core/session";
 import PatientReviewsClient from "./PatientReviewsClient";
 
 export const metadata = {
-  title: "My Feedback & Reviews - MediCare Connect",
+    title: "Feedback & Reviews | MediCare Connect",
+    description: "Share your healthcare experience by rating doctors and providing valuable feedback after consultations.",
+    keywords: ["Doctor Reviews", "Patient Feedback", "Ratings", "Healthcare Reviews"],
 };
 
 const PatientReviewsPage = async () => {

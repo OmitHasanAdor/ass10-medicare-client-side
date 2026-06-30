@@ -1,6 +1,10 @@
 import DoctorListingContainer from "./DoctorListingContainer";
 
-
+export const metadata = {
+    title: "Find Doctors | MediCare Connect",
+    description: "Search and discover verified doctors by specialty, hospital, availability, and consultation preferences.",
+    keywords: ["Find Doctors", "Verified Doctors", "Doctor Search", "Medical Specialists"],
+};
 
 async function getDoctors(queryString) {
   const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/doctors?${queryString}`, {

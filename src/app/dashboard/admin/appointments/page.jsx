@@ -5,6 +5,12 @@ import AppointmentTable from "./AppointmentTable";
 
 
 export const dynamic = "force-dynamic";
+
+export const metadata = {
+    title: "Clinical Appointments | MediCare Connect",
+    description: "Monitor, review, and manage all clinical appointments across patients and healthcare providers.",
+    keywords: ["Clinical Appointments", "Appointment Management", "Healthcare Admin", "Medical Scheduling"],
+};
 async function getAppointments() {
     try {
         const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/admin/appointments`, {

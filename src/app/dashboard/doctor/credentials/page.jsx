@@ -1,6 +1,12 @@
 import React from 'react';
 import DoctorCredentialsForm from './DoctorCredentialsForm';
 
+export const metadata = {
+    title: "Profile Credentials | MediCare Connect",
+    description: "Manage your professional profile, qualifications, certifications, and verification credentials.",
+    keywords: ["Doctor Profile", "Medical Credentials", "Qualifications", "Professional Verification"],
+};
+
 async function getDoctorData(email) {
     if (!email) return { userData: null, doctorData: null };
 

@@ -4,12 +4,13 @@ import { useState } from "react";
 import { Card } from "@heroui/react";
 import { CheckCircle2, XCircle, GraduationCap, Building2, Milestone, Stethoscope } from "lucide-react";
 import Image from "next/image";
+import toast from "react-hot-toast"; // 🚀 Hot Toast ইমপোর্ট করা হলো
 
 export default function VerifyDoctorsClient({ initialDoctors }) {
-    // সেফটি চেক: যদি initialDoctors কোনো কারণে অ্যারে না হয়, তবে খালি অ্যারে [] সেট হবে
+    // সেফটি চেক: যদি initialDoctors কোনো কারণে অ্যারে না হয়, তবে খালি অ্যারে [] সেট হবে
     const [doctors, setDoctors] = useState(() => {
         if (Array.isArray(initialDoctors)) return initialDoctors;
-        if (initialDoctors && typeof initialDoctors === "object" && Array.isArray(initialDoctors.doctors)) return initialDoctors.doctors; // আপনার এপিআই যদি অবজেক্ট পাঠায়
+        if (initialDoctors && typeof initialDoctors === "object" && Array.isArray(initialDoctors.doctors)) return initialDoctors.doctors; // আপনার এপিআই যদি অবজেক্ট পাঠায়
         return [];
     });
 
@@ -17,6 +18,9 @@ export default function VerifyDoctorsClient({ initialDoctors }) {
     const handleUpdateStatus = async (doctorId, newStatus) => {
         const confirmMsg = `Are you sure you want to change status to ${newStatus}?`;
         if (!confirm(confirmMsg)) return;
+
+        // লোডিং অবস্থার জন্য একটি প্রমিজ টোস্ট বা নরমাল টোস্ট দেওয়া যায়, এখানে কাজের সুবিধার্থে লোডিং টোস্ট রাখা হলো
+        const loadingToast = toast.loading(`Updating status to ${newStatus}...`);
 
         try {
             const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/doctors/${doctorId}/verify`, {
@@ -33,13 +37,29 @@ export default function VerifyDoctorsClient({ initialDoctors }) {
                             : doc
                     )
                 );
+
+                // 🎯 স্ট্যাটাস অনুযায়ী আলাদা আইকন ও চমৎকার মেসেজ
+                toast.dismiss(loadingToast);
+                if (newStatus === "Verified") {
+                    toast.success("Practitioner profile approved successfully! 🎉", { duration: 4000 });
+                } else if (newStatus === "Rejected") {
+                    toast.error("Practitioner profile has been rejected.", { icon: "❌", duration: 4000 });
+                } else {
+                    toast.success(`Verification status reset to ${newStatus}.`, { icon: "🔄" });
+                }
+
+            } else {
+                toast.dismiss(loadingToast);
+                toast.error("Failed to update verification status.");
             }
         } catch (error) {
+            toast.dismiss(loadingToast);
             console.error("Error updating verification status:", error);
+            toast.error("Network error occurred. Please try again.");
         }
     };
 
-    // যদি কোনো ডক্টর না থাকে বা ডেটা লোড না হয়
+    // যদি কোনো ডক্টর না থাকে বা ডেটা লোড না হয়
     if (!Array.isArray(doctors) || doctors.length === 0) {
         return (
             <div className="text-center col-span-full py-16 bg-white border border-dashed rounded-2xl p-8 text-gray-400">
@@ -78,7 +98,7 @@ export default function VerifyDoctorsClient({ initialDoctors }) {
                                         {doctor.email}
                                     </Card.Description>
                                 </div>
-                            </div>
+                            </div >
 
                             <div className="text-right shrink-0">
                                 <span className="inline-block px-2.5 py-0.5 rounded text-[10px] font-black uppercase tracking-wider bg-blue-50 text-blue-700 border border-blue-100">
@@ -88,10 +108,10 @@ export default function VerifyDoctorsClient({ initialDoctors }) {
                                     <Building2 className="size-3 text-zinc-400" /> {doctor.hospitalName}
                                 </p>
                             </div>
-                        </Card.Header>
+                        </Card.Header >
 
                         {/* 📊 কার্ড কন্টেন্ট */}
-                        <Card.Content className="px-5 py-0">
+                        <Card.Content className="px-5 py-0" >
                             <div className="grid grid-cols-3 gap-2 bg-zinc-50/70 dark:bg-zinc-950 p-3 rounded-xl border text-xs">
                                 <div className="space-y-0.5">
                                     <span className="text-zinc-400 text-[10px] uppercase font-bold flex items-center gap-1">
@@ -112,21 +132,21 @@ export default function VerifyDoctorsClient({ initialDoctors }) {
                                     <p className="font-extrabold text-blue-600">${doctor.consultationFee}</p>
                                 </div>
                             </div>
-                        </Card.Content>
+                        </Card.Content >
 
                         {/* ⚙️ কার্ড ফুটার */}
-                        <Card.Footer className="p-5 pt-3 flex items-center justify-between border-t border-zinc-100 dark:border-zinc-800">
-                            <div className="flex flex-col gap-0.5">
+                        <Card.Footer className="p-5 pt-3 flex items-center justify-between border-t border-zinc-100 dark:border-zinc-800" >
+                            <div className="flex flex-col gap-0.5" >
                                 <span className="text-[9px] uppercase font-black text-zinc-400 tracking-wider">Verification Status</span>
                                 <span className={`w-max px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider border ${status === "Verified" ? "bg-emerald-50 text-emerald-700 border-emerald-200" :
-                                        status === "Rejected" ? "bg-rose-50 text-rose-700 border-rose-200" :
-                                            "bg-amber-50 text-amber-700 border-amber-200"
+                                    status === "Rejected" ? "bg-rose-50 text-rose-700 border-rose-200" :
+                                        "bg-amber-50 text-amber-700 border-amber-200"
                                     }`}>
                                     {status}
                                 </span>
                             </div>
 
-                            <div className="flex gap-2">
+                            <div className="flex gap-2" >
                                 {status !== "Verified" ? (
                                     <button
                                         onClick={() => handleUpdateStatus(id, "Verified")}
@@ -152,8 +172,8 @@ export default function VerifyDoctorsClient({ initialDoctors }) {
                                     </button>
                                 )}
                             </div>
-                        </Card.Footer>
-                    </Card>
+                        </Card.Footer >
+                    </Card >
                 );
             })}
         </div>

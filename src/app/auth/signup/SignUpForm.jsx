@@ -3,7 +3,6 @@ import { Phone, UserCheck, Image } from "lucide-react";
 import { useState, useEffect } from "react";
 import { signUp, signIn, useSession } from "@/lib/auth-client"; // useSession এবং signIn যোগ করা হয়েছে
 import { useRouter } from "next/navigation";
-import { toast } from "sonner"; // অথবা আপনি যে toast লাইব্রেরি ব্যবহার করছেন (যেমন: react-hot-toast)
 
 import {
     Card,
@@ -21,6 +20,7 @@ import {
     At,
     ShieldKeyhole,
 } from "@gravity-ui/icons";
+import toast from "react-hot-toast";
 
 export default function SignUpForm({ redirectTo = "/dashboard/patient" }) { // ডিফল্ট রিডাইরেক্ট পেশেন্ট ড্যাশবোর্ডে
     const [name, setName] = useState("");

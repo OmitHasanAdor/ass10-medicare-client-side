@@ -49,6 +49,9 @@ export async function requireRole(requiredRole) {
         }
 
         // রোল মিলে গেলে অবজেক্টটি রিটার্ন করবে (ভবিষ্যতে আইডি বা ডাটা লাগলে লেআউটে পাবেন)
+        console.log("USER DATA:", userData);
+
+    console.log("Required:", requiredRole);
         return userData;
 
     } catch (error) {

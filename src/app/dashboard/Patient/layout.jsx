@@ -1,8 +1,8 @@
-import { requireRole } from '@/lib/core/session';
-import React from 'react';
+// import { requireRole } from '@/lib/core/session';
+// import React from 'react';
 
 const PatientLayout = async ({children}) => {
-     await requireRole('patient');
+    //  await requireRole('patient');
     return children
 };
 

@@ -1,4 +1,3 @@
-// 📂 src/app/dashboard/doctor/schedules/page.jsx
 import React from 'react';
 import ManageScheduleForm from './ManageScheduleForm';
 
@@ -21,11 +20,11 @@ async function getDoctorSchedule(email) {
 
 export default async function ManageSchedulePage({ searchParams }) {
     const resolvedSearchParams = await searchParams;
-    const email = resolvedSearchParams?.email || "doctor@doctor.com"; // ব্যাকআপ ইমেইল
+    const email = resolvedSearchParams?.email || "doctor@doctor.com"; // Backup email
 
     const doctorData = await getDoctorSchedule(email);
 
-    // ডিফল্ট ভ্যালু হিসেবে ফাঁকা অ্যারে রাখা হলো যদি ডাটাবেজে কিছু না থাকে
+    // Fallback empty arrays defined as defaults if no database entries exist
     const initialSchedule = {
         email: email,
         availableDays: doctorData?.availableDays || [],
@@ -43,7 +42,7 @@ export default async function ManageSchedulePage({ searchParams }) {
                 </p>
             </div>
 
-            {/* ক্লায়েন্ট ইন্টারফেস কম্পোনেন্ট */}
+            {/* Client interface component */}
             <ManageScheduleForm initialSchedule={initialSchedule} />
         </div>
     );

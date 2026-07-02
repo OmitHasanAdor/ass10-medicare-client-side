@@ -1,4 +1,4 @@
-// 📂 src/app/dashboard/doctor/consultations/page.jsx
+// src/app/dashboard/doctor/consultations/page.jsx
 import React from 'react';
 import ConsultationsClient from './ConsultationsClient';
 import { auth } from '@/lib/auth';
@@ -37,19 +37,19 @@ async function getDoctorAppointments(email) {
     return appointments;
 }
 
-// 🎯 ২. এটি মূল পেজ কম্পোনেন্ট যা Next.js-এর নিয়ম অনুযায়ী default export করা হয়েছে
+// 2. This is the main page component which is exported as default according to Next.js rules
 export default async function DoctorConsultationsPage() {
    
         const session = await auth.api.getSession({
             headers: await headers() // some endpoints might require headers
         })
     const DOCTOR_EMAIL = session?.user?.email || "doctor@doctor.com"; 
-    // ডেটা ফেচিং ফাংশন কল করে ডাটা আনা হলো
+    // Fetching data by calling the data fetching function
     const appointments = await getDoctorAppointments(DOCTOR_EMAIL);
 
     return (
         <div>
-            {/* ক্লায়েন্ট কম্পোনেন্টে প্রপস হিসেবে ডাটা পাঠানো হলো */}
+            {/* Passing data as props to the client component */}
             <ConsultationsClient initialAppointments={appointments} doctorEmail={DOCTOR_EMAIL} />
         </div>
     );

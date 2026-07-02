@@ -1,4 +1,3 @@
-// 📂 src/app/dashboard/doctor/schedules/ManageScheduleForm.jsx
 "use client"
 import React, { useState } from 'react';
 import { toast } from 'react-hot-toast';
@@ -24,15 +23,15 @@ export default function ManageScheduleForm({ initialSchedule }) {
     const [loading, setLoading] = useState(false);
     const router = useRouter();
     
-    // ডাইনামিক অ্যারে স্টেট ম্যানেজমেন্ট (initialSchedule থেকে আসা ডাটা সরাসরি সেভ হবে)
+    // Dynamic array state management (incoming data from initialSchedule will save directly)
     const [selectedDays, setSelectedDays] = useState(initialSchedule?.availableDays || []);
     const [selectedSlots, setSelectedSlots] = useState(initialSchedule?.availableSlots || []);
 
-    // ড্রপডাউন সিলেক্টেড রাখার স্টেট
+    // State to track current dropdown selections
     const [currentDayInput, setCurrentDayInput] = useState(DAYS_POOL[0]);
     const [currentSlotInput, setCurrentSlotInput] = useState(SLOTS_POOL[0]);
 
-    // দিন যোগ করা
+    // Add a working weekday
     const addDay = () => {
         if (selectedDays.includes(currentDayInput)) {
             return toast.error("This day is already added!");
@@ -41,12 +40,12 @@ export default function ManageScheduleForm({ initialSchedule }) {
         toast.success(`${currentDayInput} added`);
     };
 
-    // দিন মুছে ফেলা
+    // Remove a working weekday
     const removeDay = (dayToRemove) => {
         setSelectedDays(selectedDays.filter(day => day !== dayToRemove));
     };
 
-    // টাইম স্লট যোগ করা
+    // Add a time slot
     const addSlot = () => {
         if (selectedSlots.includes(currentSlotInput)) {
             return toast.error("This time slot is already added!");
@@ -55,12 +54,12 @@ export default function ManageScheduleForm({ initialSchedule }) {
         toast.success("Time slot added");
     };
 
-    // টাইম স্লট মুছে ফেলা
+    // Remove a time slot
     const removeSlot = (slotToRemove) => {
         setSelectedSlots(selectedSlots.filter(slot => slot !== slotToRemove));
     };
 
-    // PATCH API কল সাবমিশন
+    // PATCH API call submission handler
     const handleSaveChanges = async () => {
         if (selectedDays.length === 0) {
             return toast.error("Please add at least one working day!");
@@ -98,14 +97,14 @@ export default function ManageScheduleForm({ initialSchedule }) {
         }
     };
 
-    // 💡 ডাটা আসামাত্র যেন স্টেট সিঙ্ক হয় তার জন্য ইউনিক কী (Key) জেনারেট করা হলো
+    // Generate a unique component key to sync local states immediately when external data changes
     const scheduleKey = initialSchedule?.availableDays?.length + initialSchedule?.availableSlots?.length || "initial";
 
     return (
-        <div key={scheduleKey} className="space-y-6"> {/* 👈 এখানে key যুক্ত করায় ডাটা আসামাত্রই রেন্ডার হবে এবং রিপ্লেস প্রবলেম সলভ হবে */}
+        <div key={scheduleKey} className="space-y-6"> {/* Adding the key here triggers a re-render as soon as data arrives, resolving state sync problems */}
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                 
-                {/* 🗓️ WORKING WEEKDAYS CARD */}
+                {/* WORKING WEEKDAYS CARD */}
                 <div className="rounded-2xl border border-slate-100 bg-white p-6 shadow-sm">
                     <div className="mb-4 flex items-center justify-between">
                         <h3 className="text-sm font-semibold text-slate-800 flex items-center gap-2">
@@ -132,7 +131,7 @@ export default function ManageScheduleForm({ initialSchedule }) {
                         </button>
                     </div>
 
-                    {/* ব্যাজ আকারে সিলেক্টেড দিনগুলোর লিস্ট */}
+                    {/* Selected days rendered as a list of closeable badges */}
                     <div className="mt-6 flex flex-wrap gap-2">
                         {selectedDays.length === 0 ? (
                             <p className="text-xs text-slate-400 italic">No working days added yet.</p>
@@ -152,7 +151,7 @@ export default function ManageScheduleForm({ initialSchedule }) {
                     </div>
                 </div>
 
-                {/* ⏰ CONFIGURED APPOINTMENT HOURS CARD */}
+                {/* CONFIGURED APPOINTMENT HOURS CARD */}
                 <div className="rounded-2xl border border-slate-100 bg-white p-6 shadow-sm">
                     <div className="mb-4 flex items-center justify-between">
                         <h3 className="text-sm font-semibold text-slate-800 flex items-center gap-2">
@@ -176,7 +175,7 @@ export default function ManageScheduleForm({ initialSchedule }) {
                         </button>
                     </div>
 
-                    {/* ব্যাজ আকারে সিলেক্টেড টাইম স্লটগুলোর লিস্ট */}
+                    {/* Selected time slots rendered as a list of closeable badges */}
                     <div className="mt-6 flex flex-wrap gap-2">
                         {selectedSlots.length === 0 ? (
                             <p className="text-xs text-slate-400 italic">No time slots added yet.</p>
@@ -198,7 +197,7 @@ export default function ManageScheduleForm({ initialSchedule }) {
 
             </div>
 
-            {/* 💾 SAVE CHANGES FIXED ACTION ROW */}
+            {/* SAVE CHANGES FIXED ACTION ROW */}
             <div className="flex items-center justify-end rounded-2xl border border-slate-100 bg-white p-4 shadow-sm">
                 <button
                     type="button"

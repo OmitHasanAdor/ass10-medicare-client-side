@@ -29,9 +29,9 @@ export default async function DoctorDashboardPage() {
     );
   }
 
-  // ইনিশিয়াল স্টেট
+  // Initial state configuration
   let stats = { distinctPatients: 0, pendingRequests: 0, clinicianScore: "0.0 / 5.0", totalPrescriptions: 0 };
-  let reviews = []; // 👈 রিভিউ ধরে রাখার এরে
+  let reviews = []; // Array to hold review data dynamically
 
   const targetIdentifier = doctorEmail || doctorId;
 
@@ -44,7 +44,7 @@ export default async function DoctorDashboardPage() {
       const data = await res.json();
       if (data.success) {
         stats = data.stats;
-        reviews = data.reviews || []; // 👈 ডাইনামিক রিভিউ ডাটা অ্যাসাইন
+        reviews = data.reviews || []; // Assign dynamic review dataset
       }
     }
   } catch (error) {
@@ -54,7 +54,7 @@ export default async function DoctorDashboardPage() {
   return (
     <div className="p-4 sm:p-6 min-h-screen bg-slate-50">
       
-      {/* 👑 হেডার সেকশন */}
+      {/* Header Section */}
       <div className="mb-8 bg-linear-to-r from-blue-700 to-blue-950 p-6 sm:p-8 rounded-2xl shadow-lg text-white">
         <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">Clinical Overview</h1>
         <p className="text-blue-100 text-xs sm:text-sm mt-2 max-w-xl opacity-90">
@@ -62,7 +62,7 @@ export default async function DoctorDashboardPage() {
         </p>
       </div>
 
-      {/* 📊 ৪টি স্ট্যাটস কার্ড গ্রিড */}
+      {/* 4 Stats Cards Grid Layout */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8">
         <div className="bg-white p-5 rounded-xl shadow-sm border border-slate-100 flex items-center justify-between group hover:border-blue-200 transition">
           <div>
@@ -97,7 +97,7 @@ export default async function DoctorDashboardPage() {
         </div>
       </div>
 
-      {/* 💬 ⭐ Recent Patient Testimonials সেকশন (image_a1567e.png ম্যাচিং ডিজাইন) */}
+      {/* Recent Patient Testimonials Section (Matching layout for reviews) */}
       <div className="bg-white rounded-2xl p-6 sm:p-8 border border-slate-100 shadow-sm mb-8">
         <h2 className="text-lg font-bold text-slate-800 mb-6">Recent Patient Testimonials</h2>
         
@@ -129,7 +129,7 @@ export default async function DoctorDashboardPage() {
         )}
       </div>
 
-      {/* 🚀 কুইক নেভিগেশন প্যানেল */}
+      {/* Quick Navigation Panel */}
       <div className="bg-white rounded-2xl p-6 sm:p-8 border border-slate-100 shadow-sm space-y-6">
         <div className="border-b pb-4">
           <h2 className="text-lg font-bold text-slate-800">Quick Clinical Actions</h2>

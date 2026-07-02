@@ -32,7 +32,7 @@ export default async function DoctorCredentialsPage({ searchParams }) {
 
     const { userData, doctorData } = await getDoctorData(email);
 
-    // usersCollection থেকে আসা একদম বেসিক কিছু ডাটা যা টপ ব্যানারে জাস্ট দেখানোর জন্য লাগবে
+    // Basic data coming from usersCollection that will just be needed to show on the top banner
     const userBasicInfo = {
         email: email,
         name: doctorData?.doctorName || userData?.name || 'Doctor',
@@ -40,7 +40,7 @@ export default async function DoctorCredentialsPage({ searchParams }) {
         status: doctorData?.verificationStatus || 'Verified'
     };
 
-    // 🎯 ফর্মের ইনপুট ফিল্ডের জন্য আপনার চাওয়া সবকটি প্রফেশনাল ফিল্ড (ডাটা থাকলে অটো-ফিল হবে)
+    // All professional fields requested for the form input fields (will autofill if data exists)
     const initialFormData = {
         doctorName: doctorData?.doctorName || userData?.name || '',
         specialization: doctorData?.specialization || '',

@@ -1,4 +1,4 @@
-// 📂 src/app/dashboard/doctor/consultations/ConsultationsClient.jsx
+// src/app/dashboard/doctor/consultations/ConsultationsClient.jsx
 "use client"
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -39,13 +39,13 @@ export default function ConsultationsClient({ initialAppointments, doctorEmail }
         }
     };
 
-// 🎯 ডক্টরকে প্রেসক্রিপশন ডেস্কে পাঠানোর ফাংশন (ফিক্সড লোডিং বাগ)
+// Function to redirect doctor to the prescription desk (fixed loading bug)
 const handleRedirectToPrescribe = (appointmentId, patientId) => {
-    // টোস্ট আইডিটি একটি ভ্যারিয়েবলে স্টোর করে রাখা হলো
+    // Stored the toast ID inside a variable
     const loadingToastId = toast.loading("Opening prescription desk...");
     
     setTimeout(() => {
-        // রিডাইরেক্ট হওয়ার ঠিক আগে টোস্টটি ক্লোজ/ডিসমিস করে দেওয়া হলো
+        // Closed/dismissed the toast right before redirecting
         toast.dismiss(loadingToastId);
         
         router.push(`/dashboard/doctor/prescription?appointmentId=${appointmentId}&patientId=${patientId}`);
@@ -81,7 +81,7 @@ const handleRedirectToPrescribe = (appointmentId, patientId) => {
                     >
                         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                             
-                            {/* 👤 PATIENT & INFO SECTION */}
+                            {/* PATIENT & INFO SECTION */}
                             <div className="space-y-2.5 flex-1">
                                 <div className="flex flex-wrap items-center gap-2">
                                     <h3 className="font-bold text-slate-800 text-base">{patientName}</h3>
@@ -101,7 +101,7 @@ const handleRedirectToPrescribe = (appointmentId, patientId) => {
                                     </div>
                                 </div>
 
-                                {/* 🩺 SYMPTOMS BOX */}
+                                {/* SYMPTOMS BOX */}
                                 <div className="rounded-xl bg-slate-50 p-3 border border-slate-100 max-w-3xl">
                                     <p className="text-xs text-slate-400 font-semibold uppercase tracking-wider mb-0.5">Symptom Presentation:</p>
                                     <p className="text-xs text-slate-700 leading-relaxed font-medium">
@@ -110,7 +110,7 @@ const handleRedirectToPrescribe = (appointmentId, patientId) => {
                                 </div>
                             </div>
 
-                            {/* ⚙️ ACTION CONTROL & STATUS BADGE */}
+                            {/* ACTION CONTROL & STATUS BADGE */}
                             <div className="flex flex-row md:flex-col items-center justify-end gap-3 min-w-40">
                                 
                                 {isLoading ? (
@@ -137,7 +137,7 @@ const handleRedirectToPrescribe = (appointmentId, patientId) => {
                                             </div>
                                         )}
 
-                                        {/* 🎯 CONFIRMED ACTIONS: NOW PRESCRIBE BUTTON */}
+                                        {/* CONFIRMED ACTIONS: NOW PRESCRIBE BUTTON */}
                                         {isConfirmed && (
                                             <button
                                                 onClick={() => handleRedirectToPrescribe(appointment._id, patientId)}

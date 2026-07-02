@@ -1,4 +1,4 @@
-// 📂 src/app/dashboard/doctor/prescription/PrescriptionsClient.jsx
+// src/app/dashboard/doctor/prescription/PrescriptionsClient.jsx
 "use client"
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
@@ -15,17 +15,17 @@ export default function PrescriptionsClient({ acceptedAppointments, initialPresc
     const [notes, setNotes] = useState('');
     const [loading, setLoading] = useState(false);
 
-    // 🎯 এডিটিং মোড ট্র্যাক করার জন্য নতুন স্টেট
+    // State parameters used to trace editing scopes dynamically
     const [editPrescriptionId, setEditPrescriptionId] = useState(null);
     const [editingPatientName, setEditingPatientName] = useState('');
 
-    // ইউআরএল আইডি দিয়ে অটোমেটিক পেশেন্ট সিলেক্ট করা ও ফর্ম সচল করা
+    // Automatically highlight patient details and trigger entry forms if an appointment ID is passed in the URL
     useEffect(() => {
         if (urlAppointmentId && acceptedAppointments.length > 0) {
             const target = acceptedAppointments.find(app => app._id === urlAppointmentId);
             if (target && selectedAppointment?._id !== target._id) {
                 const timer = setTimeout(() => {
-                    setEditPrescriptionId(null); // এডিট মোড অফ করা
+                    setEditPrescriptionId(null); // Explicitly toggle off active editing states
                     setSelectedAppointment(target);
                 }, 0);
                 return () => clearTimeout(timer);
@@ -33,21 +33,21 @@ export default function PrescriptionsClient({ acceptedAppointments, initialPresc
         }
     }, [urlAppointmentId, acceptedAppointments, selectedAppointment]);
 
-    // 🔄 "Modify Rx" বাটন ক্লিক হ্যান্ডলার
+    // "Modify Rx" action initialization function
     const handleModifySetup = (rx) => {
         setEditPrescriptionId(rx._id);
         setEditingPatientName(rx.patientInfo?.name || 'Patient');
 
-        // ফর্মে আগের ডেটা পপুলেট করা
+        // Populate form inputs with pre-existing record content
         setDiagnosis(rx.diagnosis);
         setMedications(rx.medications);
         setNotes(rx.notes || '');
 
-        // ফর্ম দেখার সুবিধার্থে স্ক্রিনের ওপরে স্ক্রল করা
+        // Smoothly roll the window up to maximize input form visibility
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
-    // এডিট/তৈরি মোড ক্যানসেল করার ফাংশন
+    // Resets entry forms and cleanses modification or selection parameters
     const handleCancel = () => {
         setDiagnosis('');
         setMedications('');
@@ -59,14 +59,14 @@ export default function PrescriptionsClient({ acceptedAppointments, initialPresc
         }
     };
 
-    // ফর্ম সাবমিট হ্যান্ডলার (POST এবং PATCH উভয় মোড হ্যান্ডেল করবে)
+    // Combined form processor route configured to distribute both POST and PATCH modifications smoothly
     const handlePrescriptionSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
 
         try {
             if (editPrescriptionId) {
-                // 🔄 ১. PATCH: প্রেসক্রিপশন মডিফাই করার লজিক
+                // 1. PATCH: Logic path optimized for modifying existing prescription documents
                 const patchPayload = { diagnosis, medications, notes };
 
                 const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/prescriptions/${editPrescriptionId}`, {
@@ -79,12 +79,12 @@ export default function PrescriptionsClient({ acceptedAppointments, initialPresc
                 if (result.success) {
                     toast.success("Prescription modified successfully!");
                     handleCancel();
-                    router.refresh(); // ডেটা রি-ফেচ করার জন্য
+                    router.refresh(); // Triggers real-time context database revalidation
                 } else {
                     toast.error(result.message || "Failed to update prescription");
                 }
             } else {
-                // 🟢 ২. POST: নতুন প্রেসক্রিপশন তৈরি করার লজিক
+                // 2. POST: Logic path optimized for submitting fresh prescription profiles
                 if (!selectedAppointment || !currentDoctorId) {
                     setLoading(false);
                     return toast.error("Required IDs missing!");
@@ -122,17 +122,17 @@ export default function PrescriptionsClient({ acceptedAppointments, initialPresc
         }
     };
 
-    // ফর্ম ওপেন থাকবে যদি রোগী সিলেক্ট হয় অথবা এডিট মোড অন থাকে
+    // Tracks open form views based on patient target matches or active mutation flags
     const isFormVisible = selectedAppointment || editPrescriptionId;
     const currentPatientName = editPrescriptionId ? editingPatientName : selectedAppointment?.patientInfo?.name;
 
     return (
         <div className="p-6 max-w-6xl mx-auto space-y-8">
-            {/* ১. এক্সেপ্টেড অ্যাপয়েন্টমেন্ট কিউ */}
+            {/* 1. Accepted Appointments Queue container list view */}
             {!editPrescriptionId && (
                 <div className="bg-white p-4 rounded-xl shadow-sm border">
                     <h3 className="text-sm font-semibold text-blue-600 mb-3">
-                        🔵 ACCEPTED APPOINTMENTS QUEUE ({acceptedAppointments.length})
+                        ACCEPTED APPOINTMENTS QUEUE ({acceptedAppointments.length})
                     </h3>
                     {acceptedAppointments.length === 0 ? (
                         <p className="text-xs text-gray-400">No active accepted patients waiting for prescription.</p>
@@ -157,12 +157,12 @@ export default function PrescriptionsClient({ acceptedAppointments, initialPresc
                 </div>
             )}
 
-            {/* ২. প্রেসক্রিপশন ইনপুট ফর্ম (পেশেন্ট সিলেক্ট হলে বা Modify Rx এ ক্লিক করলে দৃশ্যমান হবে) */}
+            {/* 2. Interactive Input Matrix visible only upon target registration or Rx modify configurations */}
             {isFormVisible && (
                 <form onSubmit={handlePrescriptionSubmit} className="bg-white p-6 rounded-xl shadow-sm border space-y-4 ring-1 ring-blue-500/10">
                     <div className="flex justify-between items-center border-b pb-2">
                         <h3 className="text-base font-bold text-gray-800">
-                            {editPrescriptionId ? '⚙️ Modify Prescription for:' : '📝 Formulate Prescription for:'}{' '}
+                            {editPrescriptionId ? 'Modify Prescription for:' : 'Formulate Prescription for:'}{' '}
                             <span className="text-blue-600">{currentPatientName}</span>
                         </h3>
                         <button
@@ -218,7 +218,7 @@ export default function PrescriptionsClient({ acceptedAppointments, initialPresc
                 </form>
             )}
 
-            {/* ৩. হিস্টোরিক্যাল ক্যাবিন লগ */}
+            {/* 3. Historical Cabin Logger list elements */}
             <div className="space-y-4">
                 <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider">
                     HISTORICAL PRESCRIPTION CABIN LOGS
@@ -239,7 +239,7 @@ export default function PrescriptionsClient({ acceptedAppointments, initialPresc
                                             Date of Issue: {new Date(rx.createdAt).toLocaleDateString()}
                                         </p>
                                     </div>
-                                    {/* 🎯 "Modify Rx" বাটনে onClick হ্যান্ডলার যুক্ত করা হয়েছে */}
+                                    {/* Action button tracking the dynamic handleModifySetup event connector */}
                                     <button
                                         onClick={() => handleModifySetup(rx)}
                                         className="border px-3 py-1 rounded-lg text-xs font-medium hover:bg-amber-50 hover:text-amber-700 hover:border-amber-200 text-gray-600 transition"

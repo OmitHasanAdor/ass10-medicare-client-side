@@ -1,4 +1,4 @@
-// 📂 src/app/dashboard/doctor/prescription/page.jsx
+//  src/app/dashboard/doctor/prescription/page.jsx
 import React from 'react';
 import PrescriptionsClient from './PrescriptionsClient';
 
@@ -26,16 +26,16 @@ async function fetchFromBackend(endpoint) {
 }
 
 export default async function DoctorPrescriptionPage() {
-    // 💡 আপনার সেশন লজিক থাকলে এখানে বসিয়ে ইমেইলটি ডাইনামিক করতে পারেন
+    // Integrate your session logic here to make the email dynamic if required
     const DOCTOR_EMAIL = "doctor@doctor.com"; 
 
-    // ১. কিউ-এর জন্য শুধুমাত্র 'confirmed' অ্যাপয়েন্টমেন্ট নিয়ে আসা
+    // 1. Fetch only 'confirmed' appointments for the consultation queue
     const acceptedAppointments = await fetchFromBackend(`/api/doctor/appointments?email=${DOCTOR_EMAIL}&status=confirmed`);
 
     let initialPrescriptions = [];
     let currentDoctorId = null;
 
-    // ২. ডক্টরের আসল ObjectId কালেকশন থেকে ডিটেক্ট করা
+    // 2. Detect the actual doctor ObjectId from the collection data mapping
     if (acceptedAppointments.length > 0) {
         currentDoctorId = acceptedAppointments[0].doctorId;
     } else {
@@ -45,7 +45,7 @@ export default async function DoctorPrescriptionPage() {
         }
     }
 
-    // ৩. ডক্টর আইডি পাওয়া গেলে ওনার আগের সব প্রেসক্রিপশন হিস্ট্রি লগের ডাটা আনা
+    // 3. Fetch historical prescription logs once the doctorId is verified
     if (currentDoctorId) {
         initialPrescriptions = await fetchFromBackend(`/api/prescriptions?doctorId=${currentDoctorId}`);
     }

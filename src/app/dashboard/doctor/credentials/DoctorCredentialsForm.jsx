@@ -22,13 +22,13 @@ export default function DoctorCredentialsForm({ userBasicInfo, initialFormData }
     const [loading, setLoading] = useState(false);
     const [uploading, setUploading] = useState(false);
 
-    const router =useRouter()
+    const router = useRouter()
     
-    // 🎯 ইমেজ ইউআরএল হ্যান্ডেল করার জন্য স্টেট (ডাটাবেজে যেটা আছে বা ইউজার যেটা নতুন দিবে)
+    // State to handle image URL (existing data from database or newly uploaded by user)
     const [currentPhoto, setCurrentPhoto] = useState(initialFormData?.profileImage || userBasicInfo?.photo || "https://static.vecteezy.com/vite/assets/photo-masthead-375-BoK_p8LG.webp");
 
  const [formData, setFormData] = useState({
-    // 🎯 এখানে পরিবর্তন করা হয়েছে:
+    // Changes made here:
     doctorName: initialFormData?.doctorName || initialFormData?.name || userBasicInfo?.name || '',
     specialization: initialFormData?.specialization || '',
     qualifications: initialFormData?.qualifications || '',
@@ -43,23 +43,23 @@ export default function DoctorCredentialsForm({ userBasicInfo, initialFormData }
         : (initialFormData?.availableSlots ? initialFormData.availableSlots.split(',').map(s => s.trim()) : [])
 });
 
-    // 🎯 ইমেজ আপলোড হ্যান্ডলার (ইমেজ স্ট্রিং লিঙ্ক বা ফাইল ক্লাউডিনারি/ব্যাকএন্ডে পাঠাতে)
+    // Image upload handler (to send image string link or file to Cloudinary/backend)
     const handleImageChange = async (e) => {
         const file = e.target.files[0];
         if (!file) return;
 
         setUploading(true);
-        // উদাহরণ: ক্লাউডিনারি বা আপনার আপলোড এপিআই-তে ফাইল পাঠানোর লজিক
+        // Example: logic to send file to Cloudinary or your upload API
         const imageFormData = new FormData();
         imageFormData.append("image", file);
 
         try {
-            // আপনার যদি কোনো ইমেজ আপলোড এপিআই থাকে সেটি এখানে ব্যবহার করবেন
+            // Use your image upload API here if available
             // const res = await fetch('YOUR_IMAGE_UPLOAD_API', { method: 'POST', body: imageFormData });
             // const data = await res.json();
             // setCurrentPhoto(data.url);
             
-            // আপাতত ক্লায়েন্ট সাইড প্রিভিউ এর জন্য:
+            // For temporary client side preview:
             const localUrl = URL.createObjectURL(file);
             setCurrentPhoto(localUrl); 
             toast.success("Image selected! (Integrate your upload API to save permanently)");
@@ -110,7 +110,7 @@ export default function DoctorCredentialsForm({ userBasicInfo, initialFormData }
             hospitalName: formData.hospitalName,
             availableDays: formData.availableDays,
             availableSlots: formData.availableSlots,
-            profileImage: currentPhoto, // 👈 স্টেটে থাকা ডাইনামিক ইমেজটি এখন ব্যাকএন্ডে যাবে
+            profileImage: currentPhoto, // The dynamic image in state will now be sent to backend
             verificationStatus: "Verified",
             rating: 4.8
         };

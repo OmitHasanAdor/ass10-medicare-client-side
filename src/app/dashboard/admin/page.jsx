@@ -13,11 +13,11 @@ export const metadata = {
     keywords: ["Admin Dashboard", "Healthcare Analytics", "Platform Statistics", "MediCare Connect"],
 };
 
-// সার্ভার সাইড ডেটা ফেচিং ফাংশন
+// Server-side data fetching function
 async function getAnalyticsData() {
     try {
         const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/admin/analytics`, {
-            cache: "no-store", // রিয়েল-টাইম ডেটার জন্য ক্যাশিং অফ রাখা হলো
+            cache: "no-store", // Caching is disabled for real-time data
         });
         
         if (!res.ok) throw new Error("Failed to fetch analytics");
@@ -41,10 +41,10 @@ export default async function AdminDashboardPage() {
 
     return (
         <div className="p-6 space-y-8 bg-zinc-50/50 dark:bg-zinc-950 min-h-screen">
-            {/* ১. স্ট্যাটস কার্ডস (সার্ভার সাইডেই রেন্ডার হতে পারবে) */}
+            {/* 1. Stats Cards (Can be rendered directly on the server side) */}
             <DashboardStats stats={data.stats} />
 
-            {/* ২. চার্টস কম্পোনেন্ট (Recharts ক্লায়েন্ট সাইড লাইব্রেরি হওয়ায় এটি ক্লায়েন্ট কম্পোনেন্ট হিসেবে যাবে) */}
+            {/* 2. Charts Component (Passed as a client component since Recharts is a client-side library) */}
             <DashboardCharts 
                 barChartData={data.barChartData} 
                 lineChartData={data.lineChartData} 

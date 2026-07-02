@@ -4,22 +4,22 @@ import { useState } from "react";
 import { Card } from "@heroui/react";
 import { CheckCircle2, XCircle, GraduationCap, Building2, Milestone, Stethoscope } from "lucide-react";
 import Image from "next/image";
-import toast from "react-hot-toast"; // 🚀 Hot Toast ইমপোর্ট করা হলো
+import toast from "react-hot-toast"; // Imported Hot Toast
 
 export default function VerifyDoctorsClient({ initialDoctors }) {
-    // সেফটি চেক: যদি initialDoctors কোনো কারণে অ্যারে না হয়, তবে খালি অ্যারে [] সেট হবে
+    // Safety check: If initialDoctors is not an array for any reason, it sets to an empty array []
     const [doctors, setDoctors] = useState(() => {
         if (Array.isArray(initialDoctors)) return initialDoctors;
-        if (initialDoctors && typeof initialDoctors === "object" && Array.isArray(initialDoctors.doctors)) return initialDoctors.doctors; // আপনার এপিআই যদি অবজেক্ট পাঠায়
+        if (initialDoctors && typeof initialDoctors === "object" && Array.isArray(initialDoctors.doctors)) return initialDoctors.doctors; // In case the API returns an object
         return [];
     });
 
-    // স্ট্যাটাস আপডেট করার হ্যান্ডলার
+    // Handler to update verification status
     const handleUpdateStatus = async (doctorId, newStatus) => {
         const confirmMsg = `Are you sure you want to change status to ${newStatus}?`;
         if (!confirm(confirmMsg)) return;
 
-        // লোডিং অবস্থার জন্য একটি প্রমিজ টোস্ট বা নরমাল টোস্ট দেওয়া যায়, এখানে কাজের সুবিধার্থে লোডিং টোস্ট রাখা হলো
+        // Using a loading toast for the async process
         const loadingToast = toast.loading(`Updating status to ${newStatus}...`);
 
         try {
@@ -38,7 +38,7 @@ export default function VerifyDoctorsClient({ initialDoctors }) {
                     )
                 );
 
-                // 🎯 স্ট্যাটাস অনুযায়ী আলাদা আইকন ও চমৎকার মেসেজ
+                // Distinct icons and custom messages based on the new status
                 toast.dismiss(loadingToast);
                 if (newStatus === "Verified") {
                     toast.success("Practitioner profile approved successfully! 🎉", { duration: 4000 });
@@ -59,7 +59,7 @@ export default function VerifyDoctorsClient({ initialDoctors }) {
         }
     };
 
-    // যদি কোনো ডক্টর না থাকে বা ডেটা লোড না হয়
+    // Fallback UI if no doctor data is found or loaded
     if (!Array.isArray(doctors) || doctors.length === 0) {
         return (
             <div className="text-center col-span-full py-16 bg-white border border-dashed rounded-2xl p-8 text-gray-400">
@@ -80,7 +80,7 @@ export default function VerifyDoctorsClient({ initialDoctors }) {
                         key={id}
                         className="bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 shadow-sm rounded-2xl hover:border-blue-500/30 transition-all duration-300"
                     >
-                        {/* 🏷️ কার্ড হেডার */}
+                        {/* Card Header */}
                         <Card.Header className="p-5 pb-3 flex flex-row items-start justify-between gap-4">
                             <div className="flex items-center gap-3">
                                 <Image
@@ -110,7 +110,7 @@ export default function VerifyDoctorsClient({ initialDoctors }) {
                             </div>
                         </Card.Header >
 
-                        {/* 📊 কার্ড কন্টেন্ট */}
+                        {/* Card Content */}
                         <Card.Content className="px-5 py-0" >
                             <div className="grid grid-cols-3 gap-2 bg-zinc-50/70 dark:bg-zinc-950 p-3 rounded-xl border text-xs">
                                 <div className="space-y-0.5">
@@ -134,7 +134,7 @@ export default function VerifyDoctorsClient({ initialDoctors }) {
                             </div>
                         </Card.Content >
 
-                        {/* ⚙️ কার্ড ফুটার */}
+                        {/* Card Footer */}
                         <Card.Footer className="p-5 pt-3 flex items-center justify-between border-t border-zinc-100 dark:border-zinc-800" >
                             <div className="flex flex-col gap-0.5" >
                                 <span className="text-[9px] uppercase font-black text-zinc-400 tracking-wider">Verification Status</span>

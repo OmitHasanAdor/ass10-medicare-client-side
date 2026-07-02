@@ -11,6 +11,7 @@ export const metadata = {
     description: "Monitor, review, and manage all clinical appointments across patients and healthcare providers.",
     keywords: ["Clinical Appointments", "Appointment Management", "Healthcare Admin", "Medical Scheduling"],
 };
+
 async function getAppointments() {
     try {
         const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/admin/appointments`, {
@@ -29,7 +30,7 @@ export default async function ClinicalAppointmentsPage() {
 
     return (
         <div className="space-y-6 p-4 md:p-6 max-w-[1600px] mx-auto w-full">
-            {/* হেডার সেকশন */}
+            {/* Header Section */}
             <div>
                 <h1 className="text-xl md:text-2xl font-bold tracking-tight text-foreground">Clinical Appointments</h1>
                 <p className="text-xs md:text-sm text-muted-foreground">
@@ -37,7 +38,7 @@ export default async function ClinicalAppointmentsPage() {
                 </p>
             </div>
 
-            {/* ওভারভিউ কাউন্টার কার্ডস */}
+            {/* Overview Counter Cards */}
             <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
                 <Card shadow="sm" className="p-4 flex flex-row items-center gap-4 bg-background border border-default-100">
                     <div className="rounded-xl bg-primary/10 p-3 text-primary shrink-0">
@@ -74,7 +75,7 @@ export default async function ClinicalAppointmentsPage() {
                 </Card>
             </div>
 
-            {/* অ্যাপয়েন্টমেন্ট ডাটা টেবিল (HeroUI v3 Container layout) */}
+            {/* Appointment Data Table (HeroUI v3 Container layout) */}
             <div className="w-full rounded-2xl border border-default-100 bg-background overflow-hidden p-2">
                 <AppointmentTable appointments={appointments} />
             </div>

@@ -8,11 +8,11 @@ export const metadata = {
     keywords: ["Manage Users", "Patient Management", "Doctor Management", "Admin Panel"],
 };
 
-// ১. সার্ভার সাইড ডাটা ফেচিং ফাংশন
+// 1. Server-side data fetching function
 async function getUsers() {
     try {
         const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/users`, {
-            cache: "no-store", // লাইভ ডাটার জন্য ক্যাশিং বন্ধ রাখা হলো
+            cache: "no-store", // Caching is disabled for live data
         });
         
         if (!res.ok) return [];
@@ -28,7 +28,7 @@ export default async function ManageUsersPage() {
 
     return (
         <div className="p-4 md:p-8 max-w-7xl mx-auto space-y-6">
-            {/* হেডার সেকশন (সার্ভার রেন্ডারড) */}
+            {/* Header section (Server Rendered) */}
             <div className="bg-white dark:bg-zinc-900 p-6 rounded-2xl border border-zinc-100 dark:border-zinc-800 shadow-sm">
                 <h1 className="text-xl md:text-2xl font-bold text-zinc-900 dark:text-zinc-50">
                     Registered System Accounts
@@ -38,7 +38,7 @@ export default async function ManageUsersPage() {
                 </p>
             </div>
 
-            {/* ইন্টারেক্টিভ পার্ট পাস করা হচ্ছে ক্লায়েন্ট কন্টেইনারে */}
+            {/* Passing the interactive part to the client container */}
             <ManageUsersClient initialUsers={initialUsers} />
         </div>
     );

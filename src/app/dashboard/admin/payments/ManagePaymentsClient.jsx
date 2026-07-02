@@ -9,7 +9,7 @@ export default function ManagePaymentsClient({ initialPayments }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [sortDirection, setSortDirection] = useState("ascending");
 
-  // সার্চ ফিল্টার
+  // Search filter
   const filteredPayments = payments.filter((payment) => {
     const patientName = payment.patientInfo?.name || "";
     const doctorName = payment.doctorInfo?.doctorName || "";
@@ -22,7 +22,7 @@ export default function ManagePaymentsClient({ initialPayments }) {
     );
   });
 
-  // অ্যামাউন্ট সর্টিং
+  // Amount sorting logic
   const handleSort = () => {
     const nextDirection = sortDirection === "ascending" ? "descending" : "ascending";
     setSortDirection(nextDirection);
@@ -33,10 +33,10 @@ export default function ManagePaymentsClient({ initialPayments }) {
     setPayments(sorted);
   };
 
-  // ডেট ফরম্যাট হেল্পার
+  // Date formatter helper
   const formatDate = (dateValue) => {
     if (!dateValue) return "N/A";
-    const dateStr = dateValue.$date || dateValue; // MongoDB object বা raw string উভয়ের জন্যই হ্যান্ডলার
+    const dateStr = dateValue.$date || dateValue; // Handler for both MongoDB object and raw string
     return new Date(dateStr).toLocaleDateString("en-US", {
       year: "numeric",
       month: "2-digit",
@@ -47,7 +47,7 @@ export default function ManagePaymentsClient({ initialPayments }) {
   return (
     <div className="space-y-6 max-w-[1600px] mx-auto p-4 sm:p-6">
       
-      {/* 🏷️ ড্যাশবোর্ড হেডার ও সার্চবার গ্রুপ */}
+      {/* Dashboard Header & Search Bar Group */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-2">
         <div>
           <h1 className="text-xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 flex items-center gap-2">
@@ -68,7 +68,7 @@ export default function ManagePaymentsClient({ initialPayments }) {
         </div>
       </div>
 
-      {/* 🖥️ ডেস্কটপ ও ট্যাবলেট ভিউ: প্রফেশনাল HeroUI টেবিল */}
+      {/* Desktop & Tablet View: Professional HeroUI Table */}
       <div className="hidden md:block bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 rounded-2xl shadow-sm overflow-hidden">
         <Table>
           <Table.ScrollContainer>
@@ -131,7 +131,7 @@ export default function ManagePaymentsClient({ initialPayments }) {
         </Table>
       </div>
 
-      {/* 📱 মোবাইল ভিউ: রেসপনসিভ কার্ড সিস্টেম */}
+      {/* Mobile View: Responsive Card System */}
       <div className="grid grid-cols-1 gap-4 md:hidden">
         {filteredPayments.map((payment) => {
           const id = payment._id?.$oid || payment._id;
@@ -178,7 +178,7 @@ export default function ManagePaymentsClient({ initialPayments }) {
         })}
       </div>
 
-      {/* এম্পটি স্টেট */}
+      {/* Empty State */}
       {filteredPayments.length === 0 && (
         <div className="text-center py-16 bg-zinc-50/50 dark:bg-zinc-950/20 border border-dashed rounded-2xl p-8 text-zinc-400 text-xs font-medium">
           No transactions ledger match your filter parameters.

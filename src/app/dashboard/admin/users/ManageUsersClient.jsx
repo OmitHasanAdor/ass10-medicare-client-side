@@ -8,7 +8,7 @@ export default function ManageUsersClient({ initialUsers }) {
     const [users, setUsers] = useState(initialUsers);
     const [searchQuery, setSearchQuery] = useState("");
 
-    // ইউজার সাসপেন্ড হ্যান্ডলার
+    // User suspend handler
     const handleSuspendUser = async (userId) => {
         if (!confirm("Are you sure you want to suspend this user?")) return;
 
@@ -28,7 +28,7 @@ export default function ManageUsersClient({ initialUsers }) {
         }
     };
 
-    // ইউজার ডিলিট হ্যান্ডলার
+    // User delete handler
     const handleDeleteUser = async (userId) => {
         if (!confirm("Permanently delete this user?")) return;
 
@@ -52,7 +52,7 @@ export default function ManageUsersClient({ initialUsers }) {
 
     return (
         <div className="space-y-4">
-            {/* 🔍 সার্চ বার ফিল্টার */}
+            {/* 🔍 Search bar filter */}
             <div className="flex justify-end">
                 <div className="relative w-full sm:max-w-xs">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-gray-400" />
@@ -68,7 +68,7 @@ export default function ManageUsersClient({ initialUsers }) {
 
             <div className="bg-white border rounded-2xl shadow-sm overflow-hidden">
 
-                {/* 🖥️ ডেস্কটপ ও ট্যাবলেট ভিউ (HTML Table Layout) */}
+                {/* 🖥️ Desktop & Tablet view (HTML Table Layout) */}
                 <div className="hidden md:block overflow-x-auto">
                     <table className="w-full text-left border-collapse">
                         <thead>
@@ -87,7 +87,7 @@ export default function ManageUsersClient({ initialUsers }) {
 
                                 return (
                                     <tr key={id} className="hover:bg-zinc-50/30 transition-colors">
-                                        {/* ইউজার প্রোফাইল */}
+                                        {/* User profile */}
                                         <td className="px-6 py-4.5">
                                             <div className="flex items-center gap-3">
                                                 <Image
@@ -101,7 +101,7 @@ export default function ManageUsersClient({ initialUsers }) {
                                             </div>
                                         </td>
 
-                                        {/* রোল ব্যাজ (Royal Blue Tint for Admin) */}
+                                        {/* Role badge (Royal Blue Tint for Admin) */}
                                         <td className="px-6 py-4.5">
                                             <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded text-[10px] font-black uppercase tracking-wider border ${user.role === "admin" ? "bg-blue-50 text-blue-700 border-blue-100" :
                                                     user.role === "doctor" ? "bg-purple-50 text-purple-700 border-purple-100" :
@@ -111,12 +111,12 @@ export default function ManageUsersClient({ initialUsers }) {
                                             </span>
                                         </td>
 
-                                        {/* ইমেইল */}
+                                        {/* Email */}
                                         <td className="px-6 py-4.5 text-gray-500 font-medium">
                                             {user.email}
                                         </td>
 
-                                        {/* স্ট্যাটাস ব্যাজ */}
+                                        {/* Status badge */}
                                         <td className="px-6 py-4.5">
                                             <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded text-[10px] font-black uppercase tracking-wider border ${isSuspended ? "bg-rose-50 text-rose-700 border-rose-200" : "bg-emerald-50 text-emerald-700 border-emerald-200"
                                                 }`}>
@@ -125,7 +125,7 @@ export default function ManageUsersClient({ initialUsers }) {
                                             </span>
                                         </td>
 
-                                        {/* অ্যাকশন বাটন গ্রুপ */}
+                                        {/* Action button group */}
                                         <td className="px-6 py-4.5 text-center">
                                             <div className="flex justify-center items-center gap-2">
                                                 <button
@@ -160,7 +160,7 @@ export default function ManageUsersClient({ initialUsers }) {
                     </table>
                 </div>
 
-                {/* 📱 মোবাইল ভিউ (কার্ড লিস্ট) */}
+                {/* 📱 Mobile view (Card List) */}
                 <div className="block md:hidden divide-y">
                     {filteredUsers.map((user) => {
                         const id = user._id?.$oid || user._id;
@@ -196,7 +196,7 @@ export default function ManageUsersClient({ initialUsers }) {
                                     </span>
                                 </div>
 
-                                {/* মোবাইল অ্যাকশন বাটনসমূহ */}
+                                {/* Mobile action buttons */}
                                 <div className="flex gap-2 pt-1">
                                     <button
                                         disabled={isSuspended}

@@ -12,19 +12,19 @@ export const metadata = {
 
 async function getDoctorsForVerification() {
   try {
-    // আমাদের নতুন এক্সপ্রেস এপিআই এন্ডপয়েন্ট কল করা হলো
+    // Calling the new Express API endpoint
     const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/admin/doctors-verification`, {
-      cache: "no-store", // রিয়েল-টাইম ডাটার জন্য ক্যাশ অফ
+      cache: "no-store", // Disabling cache for real-time data
     });
 
     if (!res.ok) {
       throw new Error("Failed to fetch doctors list from server");
     }
 
-    return await res.json(); // এটি সরাসরি ডক্টরদের অ্যারে রিটার্ন করবে
+    return await res.json(); // Directly returns the array of doctors
   } catch (error) {
     console.error("Fetch Error in Verification Page:", error);
-    return []; // এরর হলে সেফটি হিসেবে খালি অ্যারে রিটার্ন করবে
+    return []; // Returns an empty array as a fallback in case of an error
   }
 }
 
@@ -42,7 +42,7 @@ export default async function VerificationsPage() {
         </p>
       </div>
 
-      {/* ক্লায়েন্ট কম্পোনেন্টে ডাটা পাস */}
+      {/* Passing data to the client component */}
       <VerifyDoctorsClient initialDoctors={doctorsData} />
     </div>
   );

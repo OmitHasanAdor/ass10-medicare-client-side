@@ -14,7 +14,7 @@ export default function DashboardCharts({ barChartData, lineChartData, pieChartD
         <div className="space-y-6">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 
-                {/* ১. ডক্টর রেটিং বার চার্ট */}
+                {/* 1. Doctor Ratings Bar Chart */}
                 <Card className="p-5 border border-zinc-200/80 dark:border-zinc-800 bg-white dark:bg-zinc-900 rounded-2xl shadow-sm">
                     <div className="mb-4">
                         <h4 className="text-sm font-bold text-zinc-900 dark:text-zinc-50">Clinician Performance Index (Ratings)</h4>
@@ -32,7 +32,7 @@ export default function DashboardCharts({ barChartData, lineChartData, pieChartD
                     </div>
                 </Card>
 
-                {/* ২. এ্যাপয়েন্টমেন্ট টাইমলাইন লাইন চার্ট */}
+                {/* 2. Appointment Timeline Line Chart */}
                 <Card className="p-5 border border-zinc-200/80 dark:border-zinc-800 bg-white dark:bg-zinc-900 rounded-2xl shadow-sm">
                     <div className="mb-4">
                         <h4 className="text-sm font-bold text-zinc-900 dark:text-zinc-50">Appointment Timeline (Last 7 Days)</h4>
@@ -51,7 +51,7 @@ export default function DashboardCharts({ barChartData, lineChartData, pieChartD
                 </Card>
             </div>
 
-            {/* ৩. স্পেশালাইজেশন ডোনাট পাই চার্ট */}
+            {/* 3. Specialization Donut Pie Chart */}
             <Card className="p-6 border border-zinc-200/80 dark:border-zinc-800 bg-white dark:bg-zinc-900 rounded-2xl shadow-sm">
                 <div className="mb-2">
                     <h4 className="text-sm font-bold text-zinc-900 dark:text-zinc-50">Ecosystem Specialty Breakdown</h4>

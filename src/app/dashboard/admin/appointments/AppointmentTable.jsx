@@ -27,7 +27,7 @@ export default function AppointmentTable({ appointments }) {
 
         return appointments.map((item) => (
             <Table.Row key={item._id}>
-                {/* পেশেন্ট ডিটেইলস */}
+                {/* Patient Details */}
                 <Table.Cell>
                     <div className="flex flex-col gap-1 py-1">
                         <span className="flex items-center gap-1.5 text-sm font-medium text-foreground">
@@ -40,7 +40,7 @@ export default function AppointmentTable({ appointments }) {
                     </div>
                 </Table.Cell>
 
-                {/* ডক্টর ডিটেইলস */}
+                {/* Doctor Details */}
                 <Table.Cell>
                     <div className="flex flex-col gap-1 py-1">
                         <span className="flex items-center gap-1.5 text-sm font-medium text-foreground">
@@ -53,7 +53,7 @@ export default function AppointmentTable({ appointments }) {
                     </div>
                 </Table.Cell>
 
-                {/* ডেট এবং টাইম */}
+                {/* Date and Time */}
                 <Table.Cell>
                     <div className="flex flex-col gap-0.5 text-sm py-1">
                         <span className="font-medium text-foreground">{item.appointmentDate}</span>
@@ -61,7 +61,7 @@ export default function AppointmentTable({ appointments }) {
                     </div>
                 </Table.Cell>
 
-                {/* ফি এবং পেমেন্ট মেথড */}
+                {/* Fees and Payment Method */}
                 <Table.Cell>
                     <div className="flex flex-col gap-1 text-sm py-1">
                         <span className="font-semibold text-foreground">
@@ -74,7 +74,7 @@ export default function AppointmentTable({ appointments }) {
                     </div>
                 </Table.Cell>
 
-                {/* স্ট্যাটাস ব্যাজ */}
+                {/* Status Badge */}
                 <Table.Cell>
                     <Chip
                         className="capitalize border-none min-w-23.75 text-center font-medium"
@@ -94,7 +94,7 @@ export default function AppointmentTable({ appointments }) {
             <Table.ScrollContainer>
                 <Table.Content aria-label="Clinical Appointments Table">
                     <Table.Header>
-                        {/* isRowHeader true kora error complete dur korar jonno */}
+                        {/* isRowHeader is set to true to resolve errors completely */}
                         <Table.Column isRowHeader>PATIENT & CONTACT</Table.Column>
                         <Table.Column>ASSIGNED DOCTOR</Table.Column>
                         <Table.Column>SCHEDULED DATE & TIME</Table.Column>

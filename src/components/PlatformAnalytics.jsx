@@ -1,11 +1,11 @@
 import React from "react";
 import { Star } from "lucide-react";
 
-// ডাটা ফেচিং ফাংশন
+// Data fetching helper function
 async function getHomeData() {
     try {
         const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/public/home-analytics`, {
-            next: { revalidate: 60 } // প্রতি ১ মিনিটে ডাটা ব্যাকগ্রাউন্ডে রিফ্রেশ হবে
+            next: { revalidate: 60 } // Data will refresh in the background every 1 minute
         });
         if (!res.ok) throw new Error("Failed to fetch home analytics");
         return await res.json();
@@ -21,7 +21,7 @@ async function getHomeData() {
 export default async function PlatformAnalytics() {
     const { stats, successStories } = await getHomeData();
 
-    // স্ট্যাটস কার্ডের লেআউট অ্যারে
+    // Configuration array for statistics card layout
     const statCards = [
         { label: "Total Doctors", value: `${stats.totalDoctors}+`, bg: "bg-emerald-50 dark:bg-emerald-950/30 text-emerald-900 dark:text-emerald-100" },
         { label: "Patient Trust", value: `${stats.totalPatients}+`, bg: "bg-white dark:bg-zinc-900 text-zinc-950 dark:text-zinc-50 border border-zinc-200/60 dark:border-zinc-800" },
@@ -32,7 +32,7 @@ export default async function PlatformAnalytics() {
     return (
         <section className="py-16 px-6 max-w-7xl mx-auto space-y-16">
             
-            {/* ১. Platform Statistics Grid */}
+            {/* 1. Platform Statistics Grid */}
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
                 {statCards.map((card, idx) => (
                     <div 
@@ -49,7 +49,7 @@ export default async function PlatformAnalytics() {
                 ))}
             </div>
 
-            {/* ২. Patient Success Stories Section */}
+            {/* 2. Patient Success Stories Section */}
             <div className="space-y-10">
                 <div className="text-center space-y-3">
                     <h2 className="text-3xl font-black text-zinc-900 dark:text-zinc-50 tracking-tight">
@@ -60,7 +60,7 @@ export default async function PlatformAnalytics() {
                     </p>
                 </div>
 
-                {/* রিভিউ কার্ড গ্রিড */}
+                {/* Review Card Grid */}
                 {successStories.length === 0 ? (
                     <p className="text-center text-zinc-400 text-sm">No reviews found yet.</p>
                 ) : (
@@ -70,12 +70,12 @@ export default async function PlatformAnalytics() {
                                 key={story._id}
                                 className="flex flex-col justify-between p-6 bg-white dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800 rounded-3xl shadow-sm hover:shadow-md transition-shadow duration-300"
                             >
-                                {/* রিভিউ টেক্সট */}
+                                {/* Review Text Content */}
                                 <p className="text-zinc-600 dark:text-zinc-300 text-sm leading-relaxed italic">
                                     &quot;{story.reviewText}&quot;
                                 </p>
 
-                                {/* ফুটার (নাম ও রেটিং স্টার্স) */}
+                                {/* Footer Containing Name and Rating Stars */}
                                 <div className="mt-6 pt-4 border-t border-zinc-100 dark:border-zinc-800/60 flex items-center justify-between">
                                     <div>
                                         <h4 className="font-bold text-sm text-zinc-900 dark:text-zinc-50">
@@ -86,7 +86,7 @@ export default async function PlatformAnalytics() {
                                         </p>
                                     </div>
                                     
-                                    {/* ৫ স্টার রেটিং জেনারেটর */}
+                                    {/* 5-Star Rating Indicator Generator */}
                                     <div className="flex items-center gap-0.5">
                                         {[...Array(5)].map((_, index) => (
                                             <Star 

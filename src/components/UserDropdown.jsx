@@ -22,9 +22,9 @@ const UserDropdown = ({ user }) => {
       document.removeEventListener("mousedown", close);
   }, []);
 
-  // 🚀 রোল অনুযায়ী ডাইনামিক ড্যাশবোর্ড রুট বা পাথ নির্ধারণ করা
-  // ইউজার রোল যদি 'admin', 'doctor' বা 'patient' হয়, তবে সেই অনুযায়ী রাউট তৈরি হবে। 
-  // কোনো রোল না থাকলে ডিফল্টভাবে শুধু '/dashboard' এ যাবে।
+  // 🚀 Determine the dynamic dashboard route or path based on user role
+  // Routes are generated dynamically if the user role is 'admin', 'doctor', or 'patient'.
+  // Defaults to '/dashboard/patient' if no role is found.
   const dashboardLink = user?.role 
     ? `/dashboard/${user.role.toLowerCase()}` 
     : "/dashboard/patient";
@@ -54,10 +54,10 @@ const UserDropdown = ({ user }) => {
             {user?.role || "guest"}
           </div>
 
-          {/* 🎯 এখানে আগে ফিক্সড '/dashboard' ছিল, এখন ডাইনামিক 'dashboardLink' বসানো হয়েছে */}
+          {/* 🎯 Applied the dynamic 'dashboardLink' here (previously it was fixed to '/dashboard') */}
           <Link
             href={dashboardLink}
-            onClick={() => setOpen(false)} // মেনু ক্লিক করলে যেন ড্রপডাউনটি বন্ধ হয়ে যায়
+            onClick={() => setOpen(false)} // Closes the dropdown menu when clicked
             className="block px-4 py-2 hover:bg-gray-100 rounded-lg text-gray-700 text-sm"
           >
             Dashboard

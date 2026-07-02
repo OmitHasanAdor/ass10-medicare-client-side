@@ -9,20 +9,20 @@ const Navbar = async () => {
     headers: await headers(),
   });
 
-  // 🔄 সেশন থাকলে ডাটাবেজের সঠিক কালেকশন থেকে ফটোসহ ডেটা নিয়ে আসার লজিক
+  // 🔄 If a session exists, fetch user profile details (photo, role, etc.) from the primary database collection
   let fullUserData = session?.user || null;
 
   if (session?.user?.email) {
     try {
-      // আপনার এক্সপ্রেস ব্যাকএন্ড এপিআই-তে রিকোয়েস্ট পাঠানো হচ্ছে
+      // Sending a request to the Express backend API
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_SERVER_URL}/api/current-user?email=${session.user.email}`,
-        { cache: "no-store" } // লেটেস্ট ডেটা নিশ্চিত করতে ক্যাশ অফ রাখা হলো
+        { cache: "no-store" } // Caching is disabled to ensure the latest database state is retrieved
       );
 
       if (res.ok) {
         const dbUser = await res.json();
-        // সেশনের ইউজার ডেটার সাথে ডাটাবেজ থেকে আসা role এবং photo মার্জ করে দেওয়া হলো
+        // Merging session user credentials with the role and photo details from the database
         fullUserData = { ...session.user, ...dbUser };
       }
     } catch (error) {
@@ -30,7 +30,7 @@ const Navbar = async () => {
     }
   }
 
-  // 👑 রোল অনুযায়ী ড্যাশবোর্ড পাথ নির্ধারণ (ডিফল্ট হিসেবে রোল না থাকলে /dashboard এ যাবে)
+  // 👑 Dynamic dashboard path resolution based on user role (defaults to /dashboard/patient if missing)
   const dashboardHref = fullUserData?.role 
     ? `/dashboard/${fullUserData.role.toLowerCase()}` 
     : "/dashboard/patient";
@@ -72,7 +72,7 @@ const Navbar = async () => {
               </Link>
             ))}
 
-            {/* 🚀 রোল বেসড ড্যাশবোর্ড রুট ডায়নামিকালি বসানো হয়েছে */}
+            {/* 🚀 Render the dynamic role-based dashboard route */}
             {session && (
               <Link
                 href={dashboardHref}
@@ -102,7 +102,7 @@ const Navbar = async () => {
                 </Link>
               </>
             ) : (
-              // 🚀 এখানে সেশন ইউজারের বদলে ফটো ও রোলসহ আপডেট হওয়া fullUserData পাস করা হয়েছে
+              // 🚀 Passing the synchronized fullUserData (with photo and role properties) instead of raw session user object
               <UserDropdown user={fullUserData} />
             )}
           </div>
@@ -112,7 +112,7 @@ const Navbar = async () => {
             <MobileMenu
               session={session}
               navLinks={navLinks}
-              // মোবাইল মেনুর ভেতরেও ড্যাশবোর্ড রুট ডায়নামিক করার জন্য পাস করা হলো
+              // Passed to ensure the dashboard route stays dynamic inside the mobile view layout
               dashboardHref={dashboardHref}
               user={fullUserData} 
             />

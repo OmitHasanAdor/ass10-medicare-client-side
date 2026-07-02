@@ -1,62 +1,77 @@
 import { redirect } from "next/navigation";
-// import { auth } from "../auth";
 import { headers } from "next/headers";
 import { auth } from "../auth";
 
+/**
+ * Retrieves the current authenticated user profile from the session.
+ * @returns {Promise<object|null>} The user object or null if unauthenticated.
+ */
 export const getUserSession = async () => {
     const session = await auth.api.getSession({
         headers: await headers() 
-    })
+    });
 
     return session?.user || null;
-}
+};
 
+/**
+ * Retrieves the current authenticated session token.
+ * @returns {Promise<string|null>} The session token or null if unauthenticated.
+ */
 export const getUserToken = async () => {
     const session = await auth.api.getSession({
         headers: await headers()
-    })
+    });
 
     return session?.session?.token || null;
-}
-//  @param {string} requiredRole
+};
+
+/**
+ * Route Guard helper to enforce specific roles on Server Components/Routes.
+ * @param {string} requiredRole - The role expected to access the route (e.g., "patient", "doctor", "admin")
+ * @returns {Promise<object>} Returns user data if verification passes, otherwise triggers redirect.
+ */
 export async function requireRole(requiredRole) {
-    // ১. Better Auth থেকে কারেন্ট সেশনটি নেওয়া
+    // 1. Fetch current session from Better Auth
     const session = await auth.api.getSession({
         headers: await headers(),
     });
 
-    // সেশন না থাকলে সরাসরি লগইন পেজে রিডাইরেক্ট করবে
+    // If no session exists, redirect immediately to sign-in page
     if (!session?.user?.email) {
-        redirect("/signin"); // আপনার লগইন পেজের রুট দিন
+        redirect("/signin"); 
     }
 
+    let userData = null;
+    let isFetchError = false;
+
     try {
-        // ২. এক্সপ্রেস ব্যাকএন্ড থেকে এই ইউজারের রোল কুয়েরি করা 
-        // (অথবা সরাসরি মঙ্গোডিবি ড্রাইভারে usersCollection থেকেও চেক করতে পারেন)
+        // 2. Query user role from Express backend (or direct DB query)
         const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/user-role?email=${session.user.email}`, {
             cache: "no-store"
         });
 
         if (!response.ok) {
-            redirect("/unauthorized");
+            isFetchError = true;
+        } else {
+            userData = await response.json();
         }
-
-        const userData = await response.json();
-
-        // ৩. রোল কন্ডিশন চেক করা
-        if (userData?.role !== requiredRole) {
-            // যদি রোল ম্যাচ না করে (যেমন পেশেন্ট যদি ডক্টর ড্যাশবোর্ডে ঢোকার চেষ্টা করে)
-            redirect("/unauthorized"); // একটি কাস্টম নট-অ্যালউড পেজে রিডাইরেক্ট
-        }
-
-        // রোল মিলে গেলে অবজেক্টটি রিটার্ন করবে (ভবিষ্যতে আইডি বা ডাটা লাগলে লেআউটে পাবেন)
-        console.log("USER DATA:", userData);
-
-    console.log("Required:", requiredRole);
-        return userData;
-
     } catch (error) {
-        console.error("Role Verification Error:", error);
+        console.error("Role Verification Network Error:", error);
+        isFetchError = true;
+    }
+
+    // 3. Handle redirects outside the try...catch block to avoid intercepting NEXT_REDIRECT errors
+    if (isFetchError || !userData) {
         redirect("/unauthorized");
     }
+
+    // 4. Validate role requirements
+    if (userData.role !== requiredRole) {
+        console.warn(`Access Denied. Required: ${requiredRole}, Found: ${userData.role}`);
+        redirect("/unauthorized"); 
+    }
+
+    // Return user data if verification passes for use in layouts or pages
+    return userData;
 }

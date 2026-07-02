@@ -1,28 +1,22 @@
 "use client";
-import { Phone, UserCheck, Image } from "lucide-react"; 
-import { useState, useEffect } from "react";
-import { signUp, signIn, useSession } from "@/lib/auth-client"; // useSession এবং signIn যোগ করা হয়েছে
-import { useRouter } from "next/navigation";
 
-import {
-    Card,
-    Button,
-    Link,
-    TextField,
-    Label,
-    InputGroup,
-    Input,
-} from "@heroui/react";
-import {
-    Eye,
-    EyeSlash,
-    Person,
-    At,
-    ShieldKeyhole,
-} from "@gravity-ui/icons";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { signUp, signIn, useSession } from "@/lib/auth-client";
+import { Card, Button, Link, Input } from "@heroui/react";
+import { 
+    Phone, 
+    UserCheck, 
+    Image as ImageIcon, 
+    User, 
+    Mail, 
+    Lock, 
+    Eye, 
+    EyeOff 
+} from "lucide-react"; 
 import toast from "react-hot-toast";
 
-export default function SignUpForm({ redirectTo = "/dashboard/patient" }) { // ডিফল্ট রিডাইরেক্ট পেশেন্ট ড্যাশবোর্ডে
+export default function SignUpForm({ redirectTo = "/dashboard/patient" }) { // Default redirect to patient dashboard
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -38,10 +32,10 @@ export default function SignUpForm({ redirectTo = "/dashboard/patient" }) { // �
     const [success, setSuccess] = useState("");
 
     const router = useRouter();
-    const { data: session } = useSession(); // কারেন্ট ইউজার সেশন ট্র্যাকিং
+    const { data: session } = useSession(); // Tracking current user session
     const toggleVisibility = () => setIsVisible((prev) => !prev);
 
-    // 🎯 গুগল দিয়ে লগইন করে ব্যাক করার পর অটোমেটিক এক্সপ্রেস ব্যাকএন্ডে ডাটা পুশ করার ইফেক্ট
+    // 🎯 Effect to sync and push data to Express backend automatically after Google Sign-In redirect
     useEffect(() => {
         if (session?.user) {
             const syncGoogleUser = async () => {
@@ -53,21 +47,24 @@ export default function SignUpForm({ redirectTo = "/dashboard/patient" }) { // �
                             name: session.user.name,
                             email: session.user.email,
                             photo: session.user.image,
+                            role: role, // Included currently selected role
+                            status: role === "doctor" ? "pending" : "active",
                         })
                     });
                     if (response.ok) {
-                        toast.success("Successfully secured profile as Patient!");
-                        router.push(redirectTo);
+                        toast.success(`Successfully secured profile as ${role}!`);
+                        router.push(role === "patient" ? "/dashboard/patient" : redirectTo);
                     }
                 } catch (err) {
                     console.error("Sync error:", err);
+                    toast.error("Failed to sync profile with server.");
                 }
             };
             syncGoogleUser();
         }
-    }, [session, router, redirectTo]);
+    }, [session, router, redirectTo, role]);
 
-    // 🌐 Google Sign-In হ্যান্ডলার
+    // 🌐 Google Sign-In Handler
     const handleGoogleSignIn = async () => {
         setError("");
         setIsGoogleLoading(true);
@@ -75,7 +72,7 @@ export default function SignUpForm({ redirectTo = "/dashboard/patient" }) { // �
             toast.loading("Connecting to Google Secure Portal...");
             await signIn.social({
                 provider: "google",
-                callbackURL: window.location.origin + "/auth/signup", // সাইনআপ পেজেই ব্যাক করবে ডাটা সিঙ্ক করার জন্য
+                callbackURL: window.location.origin + "/auth/signup", // Redirects back to signup page to sync data
             });
         } catch (err) {
             console.error(err);
@@ -84,6 +81,7 @@ export default function SignUpForm({ redirectTo = "/dashboard/patient" }) { // �
         }
     };
 
+    // Autofill demo accounts data
     const handleQuickFill = (selectedRole) => {
         setRole(selectedRole);
         if (selectedRole === "admin") {
@@ -110,6 +108,7 @@ export default function SignUpForm({ redirectTo = "/dashboard/patient" }) { // �
         }
     };
 
+    // Form submission handler for credential signup
     const handleSignup = async (e) => {
         e.preventDefault();
         setError("");
@@ -145,6 +144,7 @@ export default function SignUpForm({ redirectTo = "/dashboard/patient" }) { // �
                 createdAt: new Date().toISOString()
             };
 
+            // Sync full user profile details with the primary database via Express server
             const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/users`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -160,8 +160,9 @@ export default function SignUpForm({ redirectTo = "/dashboard/patient" }) { // �
             }
 
             toast.success("Account created successfully!");
-            setSuccess("Account created and profile updated successfully! Redirecting...");
+            setSuccess("Account created successfully! Redirecting...");
             
+            // Reset state values after successful account registration
             setName("");
             setEmail("");
             setPassword("");
@@ -221,9 +222,9 @@ export default function SignUpForm({ redirectTo = "/dashboard/patient" }) { // �
                     
                     {/* Role Tabs */}
                     <div className="flex flex-col gap-1.5">
-                        <Label className="text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
+                        <span className="text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
                             Register As
-                        </Label>
+                        </span>
                         <div className="grid grid-cols-3 gap-2 bg-zinc-100 dark:bg-zinc-950 p-1 rounded-xl border border-zinc-200/60 dark:border-zinc-800">
                             {["patient", "doctor", "admin"].map((r) => (
                                 <button
@@ -243,82 +244,69 @@ export default function SignUpForm({ redirectTo = "/dashboard/patient" }) { // �
                     </div>
 
                     {/* Name */}
-                    <TextField isRequired name="name" className="flex flex-col gap-1.5">
-                        <Label className="text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
-                            Full Name
-                        </Label>
-                        <InputGroup className="flex items-center gap-2 border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 bg-zinc-50 dark:bg-zinc-950 focus-within:border-blue-600 transition-colors">
-                            <Person className="text-zinc-400 pointer-events-none" size={16} />
-                            <Input
-                                type="text"
-                                placeholder="John Doe"
-                                value={name}
-                                onChange={(e) => setName(e.target.value)}
-                                className="w-full bg-transparent py-2 text-sm outline-none border-none text-zinc-900 dark:text-zinc-100"
-                            />
-                        </InputGroup>
-                    </TextField>
+                    <Input
+                        isRequired
+                        type="text"
+                        label="Full Name"
+                        labelPlacement="outside"
+                        placeholder="John Doe"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        startContent={<User className="text-zinc-400" size={16} />}
+                        variant="bordered"
+                        radius="xl"
+                    />
 
                     {/* Email */}
-                    <TextField isRequired name="email" className="flex flex-col gap-1.5">
-                        <Label className="text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
-                            Email Address
-                        </Label>
-                        <InputGroup className="flex items-center gap-2 border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 bg-zinc-50 dark:bg-zinc-950 focus-within:border-blue-600 transition-colors">
-                            <At className="text-zinc-400 pointer-events-none" size={16} />
-                            <Input
-                                type="email"
-                                placeholder="john@example.com"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                className="w-full bg-transparent py-2 text-sm outline-none border-none text-zinc-900 dark:text-zinc-100"
-                            />
-                        </InputGroup>
-                    </TextField>
+                    <Input
+                        isRequired
+                        type="email"
+                        label="Email Address"
+                        labelPlacement="outside"
+                        placeholder="john@example.com"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        startContent={<Mail className="text-zinc-400" size={16} />}
+                        variant="bordered"
+                        radius="xl"
+                    />
 
-                    {/* Photo URL Field */}
-                    <TextField name="photo" className="flex flex-col gap-1.5">
-                        <Label className="text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
-                            Profile Photo URL
-                        </Label>
-                        <InputGroup className="flex items-center gap-2 border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 bg-zinc-50 dark:bg-zinc-950 focus-within:border-blue-600 transition-colors">
-                            <Image alt={'user logo'} className="text-zinc-400 pointer-events-none" size={16} />
-                            <Input
-                                type="url"
-                                placeholder="https://example.com/image.jpg"
-                                value={photo}
-                                onChange={(e) => setPhoto(e.target.value)}
-                                className="w-full bg-transparent py-2 text-sm outline-none border-none text-zinc-900 dark:text-zinc-100"
-                            />
-                        </InputGroup>
-                    </TextField>
+                    {/* Photo URL */}
+                    <Input
+                        type="url"
+                        label="Profile Photo URL"
+                        labelPlacement="outside"
+                        placeholder="https://example.com/image.jpg"
+                        value={photo}
+                        onChange={(e) => setPhoto(e.target.value)}
+                        startContent={<ImageIcon className="text-zinc-400" size={16} />}
+                        variant="bordered"
+                        radius="xl"
+                    />
 
                     {/* Phone & Gender */}
-                    <div className="grid grid-cols-2 gap-4">
-                        <TextField isRequired name="phone" className="flex flex-col gap-1.5">
-                            <Label className="text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
-                                Phone Number
-                            </Label>
-                            <InputGroup className="flex items-center gap-2 border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 bg-zinc-50 dark:bg-zinc-950 focus-within:border-blue-600 transition-colors">
-                                <Phone className="text-zinc-400 pointer-events-none" size={14} />
-                                <Input
-                                    type="text"
-                                    placeholder="+88017..."
-                                    value={phone}
-                                    onChange={(e) => setPhone(e.target.value)}
-                                    className="w-full bg-transparent py-2 text-sm outline-none border-none text-zinc-900 dark:text-zinc-100"
-                                />
-                            </InputGroup>
-                        </TextField>
+                    <div className="grid grid-cols-2 gap-4 items-end">
+                        <Input
+                            isRequired
+                            type="text"
+                            label="Phone Number"
+                            labelPlacement="outside"
+                            placeholder="+88017..."
+                            value={phone}
+                            onChange={(e) => setPhone(e.target.value)}
+                            startContent={<Phone className="text-zinc-400" size={14} />}
+                            variant="bordered"
+                            radius="xl"
+                        />
 
                         <div className="flex flex-col gap-1.5">
-                            <Label className="text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
+                            <label className="text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
                                 Gender
-                            </Label>
+                            </label>
                             <select
                                 value={gender}
                                 onChange={(e) => setGender(e.target.value)}
-                                className="h-10 border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 bg-zinc-50 dark:bg-zinc-950 text-sm text-zinc-900 dark:text-zinc-100 focus:outline-none focus:border-blue-600 transition-colors"
+                                className="h-10 border-2 border-zinc-200 dark:border-zinc-800 rounded-xl px-3 bg-transparent text-sm text-zinc-900 dark:text-zinc-100 focus:outline-none focus:border-blue-600 transition-colors"
                             >
                                 <option value="male">Male</option>
                                 <option value="female">Female</option>
@@ -328,28 +316,27 @@ export default function SignUpForm({ redirectTo = "/dashboard/patient" }) { // �
                     </div>
 
                     {/* Password */}
-                    <TextField isRequired name="password" className="flex flex-col gap-1.5">
-                        <Label className="text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
-                            Password
-                        </Label>
-                        <InputGroup className="flex items-center gap-2 border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 bg-zinc-50 dark:bg-zinc-950 focus-within:border-blue-600 transition-colors">
-                            <ShieldKeyhole className="text-zinc-400 pointer-events-none" size={16} />
-                            <Input
-                                type={isVisible ? "text" : "password"}
-                                placeholder="••••••••"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                className="w-full bg-transparent py-2 text-sm outline-none border-none text-zinc-900 dark:text-zinc-100"
-                            />
-                            <button
-                                type="button"
-                                onClick={toggleVisibility}
-                                className="focus:outline-none text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition"
-                            >
-                                {isVisible ? <EyeSlash size={18} /> : <Eye size={18} />}
+                    <Input
+                        isRequired
+                        type={isVisible ? "text" : "password"}
+                        label="Password"
+                        labelPlacement="outside"
+                        placeholder="••••••••"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        startContent={<Lock className="text-zinc-400" size={16} />}
+                        endContent={
+                            <button className="focus:outline-none" type="button" onClick={toggleVisibility}>
+                                {isVisible ? (
+                                    <EyeOff className="text-zinc-400" size={16} />
+                                ) : (
+                                    <Eye className="text-zinc-400" size={16} />
+                                )}
                             </button>
-                        </InputGroup>
-                    </TextField>
+                        }
+                        variant="bordered"
+                        radius="xl"
+                    />
 
                     {error && <div className="p-3 text-xs font-medium rounded-xl bg-red-100/60 text-red-700 border border-red-200">{error}</div>}
                     {success && <div className="p-3 text-xs font-medium rounded-xl bg-blue-100/60 text-blue-800 border border-blue-200">{success}</div>}

@@ -1,7 +1,7 @@
 "use client";
 
-import { signIn, useSession } from "@/lib/auth-client"; // 🎯 useSession ইমপোর্ট করা হলো
-import { useState, useEffect } from "react"; // 🎯 useEffect ইমপোর্ট করা হলো
+import { signIn, useSession } from "@/lib/auth-client";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast"; 
 import {
@@ -30,7 +30,7 @@ export default function SignInForm({ redirectTo = "/" }) {
     const [success, setSuccess] = useState("");
 
     const router = useRouter();
-    const { data: session } = useSession(); // 🎯 বর্তমান সেশন ডাটা ট্র্যাকিং
+    const { data: session } = useSession(); // Tracking current session data
     const toggleVisibility = () => setIsVisible((prev) => !prev);
 
     const demoCredentials = {
@@ -47,7 +47,7 @@ export default function SignInForm({ redirectTo = "/" }) {
         }
     };
 
-    // 🎯 গুগল লগইন সাকসেস হলে ব্যাকএন্ডের সাথে ডাটা সিঙ্ক করার ইফেক্ট
+    // Effect to sync data with the backend upon successful Google Sign-In
     useEffect(() => {
         if (session?.user) {
             const syncGoogleUser = async () => {
@@ -63,11 +63,11 @@ export default function SignInForm({ redirectTo = "/" }) {
                     });
 
                     if (response.ok) {
-                        toast.success("Welcome! Securely connected with Google Profile 🎉", {
+                        toast.success("Welcome! Securely connected with Google Profile", {
                             duration: 4000,
                         });
                         
-                        // গুগল দিয়ে আসলে ডিফল্ট রোল 'patient' থাকে, তাই ড্যাশবোর্ডে রিডাইরেক্ট
+                        // Default role for Google login is 'patient', redirecting to the dashboard
                         router.push("/dashboard/patient");
                         router.refresh();
                     } else {
@@ -85,14 +85,14 @@ export default function SignInForm({ redirectTo = "/" }) {
         }
     }, [session, router]);
 
-    // 🌐 Google Sign-In হ্যান্ডলার
+    // Google Sign-In Handler
     const handleGoogleSignIn = async () => {
         setError("");
         setIsGoogleLoading(true);
         try {
             await signIn.social({
                 provider: "google",
-                // 🎯 লগইন সাকসেস হলে এই পেজেই ব্যাক করবে যেন উপরের useEffect-টি রান করে ডাটা সিঙ্ক করতে পারে
+                // Returns to this page on success so that the above useEffect runs to sync data
                 callbackURL: window.location.origin + "/auth/signin", 
                 newUserOptions: {
                     data: {
@@ -110,7 +110,7 @@ export default function SignInForm({ redirectTo = "/" }) {
         }
     };
 
-    // 📧 Email Sign-In হ্যান্ডলার
+    // Email Sign-In Handler
     const handleSignIn = async (e) => {
         e.preventDefault();
         setError("");
@@ -194,7 +194,7 @@ export default function SignInForm({ redirectTo = "/" }) {
                     </p>
                 </div>
 
-                {/* 🌐 Google Sign-In Button Integration */}
+                {/* Google Sign-In Button Integration */}
                 <div className="mb-4">
                     <Button
                         type="button"

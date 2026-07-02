@@ -152,7 +152,7 @@ const NotFound = () => {
             }}
             className="mt-6 inline-flex items-center gap-2 rounded-xl bg-red-100 px-5 py-3 font-semibold text-red-600"
           >
-            🚑 Emergency Hotline: 999
+            Emergency Hotline: 999
           </motion.div>
         </motion.div>
       </div>

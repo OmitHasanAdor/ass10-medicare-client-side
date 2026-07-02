@@ -23,7 +23,7 @@ const MobileMenu = ({ session, navLinks, dashboardHref }) => {
             </div>
 
             <div className="mt-8 flex flex-col gap-5">
-              {/* জেনারেল নেভিগেশন লিঙ্কসমূহ */}
+              {/* General navigation links */}
               {navLinks.map((item) => (
                 <Link
                   key={item.href}
@@ -35,7 +35,7 @@ const MobileMenu = ({ session, navLinks, dashboardHref }) => {
                 </Link>
               ))}
 
-              {/* 🚀 রোল বেসড ড্যাশবোর্ড রুট */}
+              {/* 🚀 Role-based dashboard route */}
               {session && (
                 <Link 
                   href={dashboardHref || "/dashboard"} 
@@ -46,7 +46,7 @@ const MobileMenu = ({ session, navLinks, dashboardHref }) => {
                 </Link>
               )}
 
-              {/* অথেন্টিকেশন লিঙ্কসমূহ */}
+              {/* Authentication links */}
               {!session && (
                 <>
                   <Link 

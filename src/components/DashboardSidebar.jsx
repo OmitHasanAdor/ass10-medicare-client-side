@@ -7,13 +7,13 @@ import Link from "next/link";
 export async function DashboardSidebar() {
 
     const user = await getUserSession();
-    let currentRole = 'patient'; // ফলব্যাক ডিফল্ট রোল
+    let currentRole = 'patient'; // Fallback default role
 
-    // 🌟 সেশন থেকে ইমেইল নিয়ে ব্যাকএন্ড থেকে ডাইনামিক রোল তুলে আনা
+    // Fetch the dynamic role from the backend using the email from the session
     if (user?.email) {
         try {
             const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/user-role?email=${user.email}`, {
-                cache: "no-store" // প্রতিবার লেটেস্ট রোল চেক করার জন্য
+                cache: "no-store" // Ensure the latest role is checked every time
             });
             if (response.ok) {
                 const userData = await response.json();
@@ -60,7 +60,7 @@ export async function DashboardSidebar() {
         admin: adminNavLinks
     };
 
-    // এখন পারফেক্টলি ডাটাবেজ থেকে আসা রোল অনুযায়ী লিংক সিলেক্ট হবে
+    // Links will now be perfectly selected based on the role retrieved from the database
     const navItems = navLinksMap[currentRole] || patientNavLinks;
 
     const navContent = (

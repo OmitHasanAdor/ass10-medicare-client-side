@@ -3,22 +3,22 @@ import Image from "next/image";
 import Link from "next/link";
 import { Stethoscope, Award, DollarSign, ArrowRight } from "lucide-react";
 
-// সার্ভার সাইড ডাটা ফেচিং (শুধুমাত্র Verified ডাক্তারদের ফিল্টার করার জন্য)
+// Server-side data fetching (specifically filtering for Verified doctors)
 async function getFeaturedDoctors() {
     try {
         const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/doctors?status=verified`, {
-            next: { revalidate: 3600 } // ISR ক্যাশিং
+            next: { revalidate: 3600 } // ISR Caching
         });
 
         if (!res.ok) throw new Error("Failed to fetch featured doctors");
         const data = await res.json();
         
-        // 🎯 ১. যদি ডাটা সরাসরি অ্যারে হয়
+        // 1. If the data is directly an array
         if (Array.isArray(data)) {
             return data.slice(0, 4);
         }
         
-        // 🎯 ২. যদি ব্যাকএন্ড থেকে অবজেক্টের ভেতর (যেমন data.doctors বা data.data) অ্যারে পাঠানো হয়
+        // 2. If the backend sends the array wrapped inside an object (e.g., data.doctors or data.data)
         if (data && Array.isArray(data.doctors)) {
             return data.doctors.slice(0, 4);
         }
@@ -26,7 +26,7 @@ async function getFeaturedDoctors() {
             return data.data.slice(0, 4);
         }
 
-        // যদি কোনো অ্যারে না পাওয়া যায়, তবে খালি অ্যারে রিটার্ন করবে যাতে পেজ ক্র্যাশ না করে
+        // If no array is found, return an empty array to prevent the page from crashing
         return [];
     } catch (error) {
         console.error("Error loading featured doctors:", error);
@@ -42,7 +42,7 @@ export default async function FeaturedDoctors() {
     return (
         <section className="py-16 px-6 max-w-7xl mx-auto space-y-10">
             
-            {/* হেডার সেকশন */}
+            {/* Header Section */}
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
                 <div className="space-y-2">
                     <h2 className="text-3xl font-black text-zinc-900 dark:text-zinc-50 tracking-tight">
@@ -61,14 +61,14 @@ export default async function FeaturedDoctors() {
                 </Link>
             </div>
 
-            {/* ডক্টর কার্ড গ্রিড */}
+            {/* Doctor Card Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 {doctors.map((doctor) => (
                     <div 
                         key={doctor._id}
                         className="group flex flex-col bg-white dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800 rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300"
                     >
-                        {/* ১. ডক্টর ইমেজ এবং স্পেশালাইজেশন ব্যাজ */}
+                        {/* 1. Doctor Image and Specialization Badge */}
                         <div className="relative h-64 w-full bg-zinc-100 dark:bg-zinc-800 overflow-hidden">
                             <Image
                                 src={doctor.profileImage || "https://static.vecteezy.com/vite/assets/photo-masthead-375-BoK_p8LG.webp"}
@@ -82,7 +82,7 @@ export default async function FeaturedDoctors() {
                             </span>
                         </div>
 
-                        {/* ২. ডক্টর ইনফরমেশন */}
+                        {/* 2. Doctor Information */}
                         <div className="p-5 flex flex-col grow justify-between space-y-4">
                             <div className="space-y-1.5">
                                 <h3 className="font-bold text-base text-zinc-900 dark:text-zinc-50 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
@@ -93,7 +93,7 @@ export default async function FeaturedDoctors() {
                                 </p>
                             </div>
 
-                            {/* ৩. এক্সপেরিয়েন্স, ফি এবং প্রোফাইল লিংক */}
+                            {/* 3. Experience, Fee and Profile Link */}
                             <div className="pt-4 border-t border-zinc-100 dark:border-zinc-800/60 flex flex-col gap-3">
                                 <div className="flex items-center justify-between text-xs font-bold text-zinc-700 dark:text-zinc-300">
                                     <span className="flex items-center gap-1 text-zinc-500 dark:text-zinc-400 font-medium">
@@ -105,7 +105,7 @@ export default async function FeaturedDoctors() {
                                     </span>
                                 </div>
 
-                                {/* ডাইনামিক রাউটিং বাটন */}
+                                {/* Dynamic Routing Button */}
                                 <Link 
                                     href={`/find-doctors/${doctor._id}`}
                                     className="w-full text-center bg-zinc-900 dark:bg-zinc-50 text-white dark:text-zinc-900 text-xs font-bold py-2.5 rounded-xl hover:opacity-90 transition-opacity mt-1 block"

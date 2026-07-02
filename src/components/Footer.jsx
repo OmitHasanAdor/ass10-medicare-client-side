@@ -136,7 +136,6 @@ const Footer = () => {
 
                                 <FaLinkedinIn size={20} />
 
-
                             </Link>
 
                             <Link

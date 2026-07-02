@@ -1,4 +1,3 @@
-// src/app/dashboard/patient/page.jsx
 import { auth } from "@/lib/auth"; 
 import PatientOverviewClient from "./PatientOverviewClient";
 import { headers } from "next/headers";
@@ -22,14 +21,14 @@ export default async function PatientDashboardPage() {
     let patientName = session.user.name || "Patient";
 
     try {
-        // নতুন তৈরি করা এক্সপ্রেস এপিআই-তে সিঙ্গেল হিট করা
+        // Single hit to the newly created Express API endpoint
         const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/patient-dashboard-data?email=${session.user.email}`, {
             cache: "no-store"
         });
 
         if (response.ok) {
             appointments = await response.json();
-            console.log("appointments",appointments)
+            console.log("appointments", appointments)
         }
     } catch (error) {
         console.error("Fetch Error:", error);
@@ -37,4 +36,3 @@ export default async function PatientDashboardPage() {
 
     return <PatientOverviewClient appointments={appointments} patientName={patientName} />;
 }
-

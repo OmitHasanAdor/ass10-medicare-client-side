@@ -9,14 +9,14 @@ export default function DoctorFilters({
   specialization, setSpecialization, 
   sortOrder, setSortOrder 
 }) {
-  // আপনার ডাটার সাথে মিল রেখে স্পেশালাইজেশন লিস্ট
+  // Specialization list matching your data structure
   const specialties = ["General Medicine", "Neurology", "Orthopedics", "Pediatrics", "Dermatology", "Cardiology"];
 
   return (
     <div className="flex flex-col gap-4 bg-zinc-900/50 p-6 rounded-[24px] border border-zinc-800/80 max-w-7xl mx-auto mb-10">
       <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
         
-        {/* ১. নাম ও হসপিটাল সার্চ */}
+        {/* 1. Name and Hospital Search */}
         <div className="md:col-span-5">
           <TextField className="w-full">
             <span className="text-sm font-medium text-zinc-400 block mb-2">Search Doctor</span>
@@ -24,7 +24,7 @@ export default function DoctorFilters({
               <InputGroup.Prefix className="pl-3 text-zinc-500">
                 <Magnifier className="w-4 h-4" />
               </InputGroup.Prefix>
-              {/* 🎯 ফিক্স: value এবং onChange প্রোপার্টি সরাসরি Input-এ দেওয়া হলো */}
+              {/* Fix: value and onChange properties provided directly to Input */}
               <InputGroup.Input 
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -35,7 +35,7 @@ export default function DoctorFilters({
           </TextField>
         </div>
 
-        {/* ২. স্পেশালাইজেশন ড্রপডাউন */}
+        {/* 2. Specialization Dropdown */}
         <div className="md:col-span-4">
           <span className="text-sm font-medium text-zinc-400 block mb-2">Specialization</span>
           <Select selectedKey={specialization} onSelectionChange={(key) => setSpecialization(key)}>
@@ -59,7 +59,7 @@ export default function DoctorFilters({
           </Select>
         </div>
 
-        {/* ৩. সোর্টিং ড্রপডাউন */}
+        {/* 3. Sorting Dropdown */}
         <div className="md:col-span-3">
           <span className="text-sm font-medium text-zinc-400 block mb-2">Sort By</span>
           <Select selectedKey={sortOrder} onSelectionChange={(key) => setSortOrder(key)}>

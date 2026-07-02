@@ -18,7 +18,7 @@ async function getDoctors(queryString) {
 export default async function Page({ searchParams }) {
   const filters = await searchParams;
 
-  // ডিফল্ট ফিল্টার অবজেক্ট তৈরি
+  // Create default filters object
   const filterObj = {
     search: filters?.search || "",
     specialization: filters?.specialization || "all",
@@ -43,7 +43,7 @@ export default async function Page({ searchParams }) {
         </p>
       </div>
 
-      {/* ক্লায়েন্ট র‍্যাপার কন্টেইনারে ডেটা পাস */}
+      {/* Passing data down to the client wrapper container */}
       <DoctorListingContainer filters={filterObj} doctors={doctors || []} total={total} />
     </div>
   );

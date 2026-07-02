@@ -1,4 +1,3 @@
-// src/app/dashboard/patient/PatientOverviewClient.jsx
 "use client";
 
 import React from "react";
@@ -16,46 +15,46 @@ import Image from "next/image";
 
 export default function PatientOverviewClient({ appointments = [], patientName = "Patient" }) {
 
-  // ১. আজকের তারিখ বের করা (টাইমজোন ও হাইড্রেশন সেফ রাখার জন্য লোকাল ফরমেট)
+  // 1. Get today's date (local format to keep it safe for timezone handling and hydration)
   const today = new Date();
   const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
 
-  // ২. ফিল্টারিং লজিক (রিয়েল-টাইম এবং ক্র্যাশ সেফটি চেক সহ)
+  // 2. Filtering logic (includes real-time and crash safety checks)
   const upcomingAppointments = appointments.filter(app => app && app.appointmentDate >= todayStr);
   const appointmentHistory = appointments.filter(app => app && app.appointmentDate < todayStr);
 
-  // ③. টোটাল পেমেন্ট হিসেব করা (যেগুলো 'paid')
+  // 3. Calculate total payments (for items marked as 'paid')
   const totalPayments = appointments
     .filter(app => app && app.paymentStatus === "paid")
     .reduce((sum, app) => sum + (Number(app.amountPaid) || 0), 0);
 
-  // ৪. ভিজিটেড ডক্টরস বের করা (Set ব্যবহার করে ডুপ্লিকেট রিমুভ ও ক্র্যাশ প্রোটেকশন)
+  // 4. Extract visited doctors (uses Set to remove duplicates and protect against crashes)
   const uniqueDoctorIds = new Set();
   const visitedDoctors = appointments
-    .filter(app => app && app.doctorDetails) // নিশ্চিত হওয়া doctorDetails অবজেক্ট আছে কিনা
+    .filter(app => app && app.doctorDetails) // Ensure the doctorDetails object exists
     .map(app => app.doctorDetails)
     .filter(doc => {
-      // মঙ্গোডিবির অবজেক্ট আইডি বা সাধারণ স্ট্রিং আইডি সেফলি হ্যান্ডেল করা
+      // Safely handle MongoDB ObjectIDs or general string IDs
       const docId = doc._id?.$oid ? doc._id.$oid : doc._id?.toString();
       if (!docId || uniqueDoctorIds.has(docId)) return false;
       uniqueDoctorIds.add(docId);
       return true;
     })
-    .slice(0, 4); // ড্যাশবোর্ডে সর্বোচ্চ ৪ জন দেখাবে
+    .slice(0, 4); // Display a maximum of 4 doctors on the dashboard
 
   return (
     <div className="p-4 md:p-8 max-w-7xl mx-auto space-y-8 bg-gray-50/10 min-h-screen">
 
-      {/* 🌟 হেডার সেকশন */}
+      {/* Header Section */}
       <div className="flex flex-col gap-1">
-        <h1 className="text-xl md:text-2xl font-bold text-gray-800">Welcome back, {patientName}! ✨</h1>
+        <h1 className="text-xl md:text-2xl font-bold text-gray-800">Welcome back, {patientName}!</h1>
         <p className="text-xs md:text-sm text-gray-500">Monitor your upcoming health checkups and payments.</p>
       </div>
 
-      {/* 📊 স্ট্যাটস গ্রিড (Stats Grid) */}
+      {/* Stats Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
 
-        {/* টোটাল পেমেন্ট */}
+        {/* Total Expenses */}
         <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex items-center justify-between group hover:border-green-200 transition duration-300">
           <div className="space-y-1">
             <span className="text-xs md:text-sm text-gray-400 font-medium">Total Expenses</span>
@@ -66,7 +65,7 @@ export default function PatientOverviewClient({ appointments = [], patientName =
           </div>
         </div>
 
-        {/* আপকামিং ভিジット */}
+        {/* Upcoming Visits */}
         <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex items-center justify-between group hover:border-blue-200 transition duration-300">
           <div className="space-y-1">
             <span className="text-xs md:text-sm text-gray-400 font-medium">Upcoming Visits</span>
@@ -77,7 +76,7 @@ export default function PatientOverviewClient({ appointments = [], patientName =
           </div>
         </div>
 
-        {/* টোটাল হিস্ট্রি */}
+        {/* Consulted History */}
         <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex items-center justify-between group hover:border-purple-200 transition duration-300 sm:col-span-2 lg:col-span-1">
           <div className="space-y-1">
             <span className="text-xs md:text-sm text-gray-400 font-medium">Consulted History</span>
@@ -90,10 +89,10 @@ export default function PatientOverviewClient({ appointments = [], patientName =
 
       </div>
 
-      {/* 🔄 মেইন ড্যাশবোর্ড গ্রিড লেআউট */}
+      {/* Main Dashboard Grid Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
-        {/* 📋 বাম দিকের ২-কলাম সেকশন (Upcoming & History) */}
+        {/* Left Side 2-Column Section (Upcoming & History) */}
         <div className="lg:col-span-2 space-y-8">
 
           {/* Upcoming Appointments */}
@@ -162,7 +161,7 @@ export default function PatientOverviewClient({ appointments = [], patientName =
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-50 text-xs md:text-sm">
-                    {/* 🎯 Safe array checking দিয়ে কোডটি সুরক্ষিত করা হলো */}
+                    {/* Code secured using safe array verification checks */}
                     {(Array.isArray(appointmentHistory) ? appointmentHistory : [])
                       .slice(0, 5)
                       .map((app) => (
@@ -191,7 +190,7 @@ export default function PatientOverviewClient({ appointments = [], patientName =
 
         </div>
 
-        {/* 🗂️ ডান দিকের কলাম (Favorite/Visited Doctors) */}
+        {/* Right Side Column (Favorite/Visited Doctors) */}
         <div className="space-y-8">
           <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 md:p-6 space-y-4">
             <div className="flex justify-between items-center border-b pb-3">

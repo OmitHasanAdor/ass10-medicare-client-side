@@ -1,4 +1,4 @@
-import { getUserSession } from "@/lib/core/session"; // আপনার অ্যাপের সেশন মেকানিজম অনুযায়ী
+import { getUserSession } from "@/lib/core/session";
 import PatientPaymentsClient from "./PatientPaymentsClient";
 
 
@@ -10,13 +10,13 @@ export const metadata = {
 
 const PatientPaymentsPage = async () => {
   const user = await getUserSession();
-  const patientId = user?._id || user?.id; // আপনার সেশনে থাকা মঙ্গোডিবি ইউজার আইডি
+  const patientId = user?._id || user?.id; // MongoDB user ID from your session template
 
   let payments = [];
   if (patientId) {
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/payments/patient/${patientId}`, {
-        cache: "no-store", // রিয়েল-টাইম ডাটা নিশ্চিত করতে ক্যাশ বন্ধ রাখা হয়েছে
+        cache: "no-store", // Cache disabled to guarantee real-time data fetching
       });
       if (res.ok) {
         payments = await res.json();
@@ -28,13 +28,13 @@ const PatientPaymentsPage = async () => {
 
   return (
     <div className="w-full max-w-5xl mx-auto px-4 py-6 space-y-6">
-      {/* হেডার পার্ট */}
+      {/* Header Section */}
       <div>
         <h1 className="text-2xl font-black text-gray-800 tracking-tight">Stripe Payment Transactions</h1>
         <p className="text-xs text-gray-500 mt-0.5">View and monitor your historical bills, receipts, and digital transaction logs.</p>
       </div>
 
-      {/* ক্লায়েন্ট টেবিল রেন্ডারিং */}
+      {/* Client Table Rendering */}
       <PatientPaymentsClient initialPayments={payments} />
     </div>
   );

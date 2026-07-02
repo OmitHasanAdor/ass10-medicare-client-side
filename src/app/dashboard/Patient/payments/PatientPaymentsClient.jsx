@@ -7,14 +7,14 @@ const PatientPaymentsClient = ({ initialPayments }) => {
   const [payments] = useState(initialPayments);
   const [copiedId, setCopiedId] = useState(null);
 
-  // ট্রানজেকশন আইডি কপিয়ার ফাংশন
+  // Transaction ID copier function
   const handleCopy = (txId) => {
     navigator.clipboard.writeText(txId);
     setCopiedId(txId);
     setTimeout(() => setCopiedId(null), 2000);
   };
 
-  // ডেট ফরম্যাটার ইউটিলিটি
+  // Date formatter utility
   const formatDate = (dateObj) => {
     if (!dateObj) return "N/A";
     const dateStr = dateObj.$date || dateObj;
@@ -38,7 +38,7 @@ const PatientPaymentsClient = ({ initialPayments }) => {
   return (
     <div className="bg-white border rounded-2xl shadow-sm overflow-hidden">
       
-      {/* 🖥️ ডেস্কটপ ও ট্যাবলেট ভিউ (বড় স্ক্রিনের জন্য প্রফেশনাল টেবিল) */}
+      {/* Desktop & Tablet View (Professional table layout for larger screens) */}
       <div className="hidden sm:block overflow-x-auto">
         <table className="w-full text-left border-collapse">
           <thead>
@@ -53,12 +53,12 @@ const PatientPaymentsClient = ({ initialPayments }) => {
           <tbody className="divide-y text-sm text-gray-700">
             {payments.map((pay) => (
               <tr key={pay._id} className="hover:bg-zinc-50/50 transition-colors">
-                {/* ডাক্তার নাম */}
+                {/* Doctor Name */}
                 <td className="px-6 py-4.5 font-bold text-gray-800">
                   {pay.doctorDetails?.doctorName || "Medical Specialist"}
                 </td>
                 
-                {/* ট্রানজেকশন আইডি বাটনসহ */}
+                {/* Transaction ID with dynamic action button */}
                 <td className="px-6 py-4.5 font-mono text-xs text-gray-500">
                   <div className="flex items-center gap-1.5 group max-w-50">
                     <span className="truncate">{pay.transactionId}</span>
@@ -72,17 +72,17 @@ const PatientPaymentsClient = ({ initialPayments }) => {
                   </div>
                 </td>
                 
-                {/* অ্যামাউন্ট */}
+                {/* Amount */}
                 <td className="px-6 py-4.5 font-extrabold text-emerald-600">
                   ${pay.amount}
                 </td>
                 
-                {/* পেমেন্ট ডেট */}
+                {/* Payment Date */}
                 <td className="px-6 py-4.5 text-gray-500 text-xs">
                   {formatDate(pay.paymentDate)}
                 </td>
                 
-                {/* স্ট্যাটাস ব্যাজ */}
+                {/* Status Badge */}
                 <td className="px-6 py-4.5 text-center">
                   <span className="bg-emerald-50 text-emerald-700 border border-emerald-200 px-2.5 py-0.5 rounded text-[10px] font-black uppercase tracking-wider">
                     Success
@@ -94,7 +94,7 @@ const PatientPaymentsClient = ({ initialPayments }) => {
         </table>
       </div>
 
-      {/* 📱 মোবাইল ভিউ (ছোট স্ক্রিনে এটি কার্ড লিস্টে কনভার্ট হয়ে যাবে) */}
+      {/* Mobile View (Converts into clean individual card items on compact viewports) */}
       <div className="block sm:hidden divide-y">
         {payments.map((pay) => (
           <div key={pay._id} className="p-4 space-y-3 bg-white hover:bg-zinc-50/50 transition">

@@ -1,4 +1,4 @@
-import { getUserSession } from "@/lib/core/session"; // আপনার সেশন মেকানিজম অনুযায়ী
+import { getUserSession } from "@/lib/core/session"; // According to your session mechanism
 import AppointmentsListClient from "./AppointmentsListClient";
 
 export const dynamic = "force-dynamic";
@@ -11,9 +11,9 @@ export const metadata = {
 
 const PatientAppointmentsPage = async () => {
   const user = await getUserSession();
-  const patientId = user?._id || user?.id; // আপনার সেশনে যেভাবে মঙ্গো আইডি থাকে
+  const patientId = user?._id || user?.id; // Standard MongoDB user ID mapping from your session template
 
-  // ব্যাকএন্ড থেকে অ্যাপয়েন্টমেন্ট ডাটা নিয়ে আসা
+  // Fetch appointment data from the backend
   let appointments = [];
   if (patientId) {
     try {
@@ -30,7 +30,7 @@ const PatientAppointmentsPage = async () => {
 
   return (
     <div className="w-full max-w-5xl mx-auto px-4 py-6 space-y-6">
-      {/* হেডার পার্ট */}
+      {/* Header Section */}
       <div className="flex justify-between items-center border-b pb-4">
         <div>
           <h1 className="text-2xl font-black text-gray-800 tracking-tight">Appointment Records</h1>
@@ -41,7 +41,7 @@ const PatientAppointmentsPage = async () => {
         </div>
       </div>
 
-      {/* ক্লায়েন্ট লিস্ট রেন্ডারিং ও CRUD হ্যান্ডলার */}
+      {/* Client List Rendering & CRUD Handlers */}
       <AppointmentsListClient initialAppointments={appointments} patientId={patientId} />
     </div>
   );

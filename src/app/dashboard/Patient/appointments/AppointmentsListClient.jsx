@@ -7,11 +7,11 @@ import { Calendar, Clock, DollarSign, FileText, AlertTriangle } from "lucide-rea
 const AppointmentsListClient = ({ initialAppointments, patientId }) => {
   const [appointments, setAppointments] = useState(initialAppointments);
   
-  // মোডাল ও অ্যাকশন স্টেটস
+  // Modal & action states
   const [activeAppointment, setActiveAppointment] = useState(null);
   const [modalType, setModalType] = useState(null); // 'view' | 'reschedule' | 'cancel'
   
-  // রিশেডিউল ফর্ম স্টেট
+  // Reschedule form state
   const [newDate, setNewDate] = useState("");
   const [newTime, setNewTime] = useState("10:00 AM - 12:00 PM");
 
@@ -29,7 +29,7 @@ const AppointmentsListClient = ({ initialAppointments, patientId }) => {
     setModalType(null);
   };
 
-  // ❌ CRUD: Cancel/Delete Handler
+  // CRUD: Cancel/Delete Handler
   const handleCancel = async () => {
     if (!activeAppointment) return;
     try {
@@ -45,7 +45,7 @@ const AppointmentsListClient = ({ initialAppointments, patientId }) => {
     }
   };
 
-  // 🔄 CRUD: Reschedule Handler
+  // CRUD: Reschedule Handler
   const handleReschedule = async (e) => {
     e.preventDefault();
     if (!activeAppointment) return;
@@ -89,7 +89,7 @@ const AppointmentsListClient = ({ initialAppointments, patientId }) => {
         return (
           <div key={app._id} className="bg-white border rounded-2xl p-5 shadow-sm hover:shadow-md transition flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             
-            {/* ডক্টর ইনফো ও বেসিক ডাটা */}
+            {/* Doctor Info & Basic Data */}
             <div className="flex items-start gap-4 w-full md:w-auto">
               <div className="relative size-14 bg-zinc-100 rounded-xl overflow-hidden border shrink-0">
                 <Image
@@ -107,7 +107,7 @@ const AppointmentsListClient = ({ initialAppointments, patientId }) => {
                   </span>
                 </div>
                 
-                {/* মেটাডিটা গ্রিড */}
+                {/* Metadata Grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1 text-xs text-gray-500 pt-1">
                   <p className="flex items-center gap-1.5">
                     <Calendar className="size-3.5 text-blue-500" /> {app.appointmentDate}
@@ -121,7 +121,7 @@ const AppointmentsListClient = ({ initialAppointments, patientId }) => {
                   </p>
                 </div>
 
-                {/* সিম্পটমস শোকেস */}
+                {/* Symptoms Showcase */}
                 <div className="mt-2 text-xs bg-zinc-50 p-2.5 rounded-lg border text-gray-600 max-w-xl">
                   <span className="font-semibold text-gray-800">Symptoms:</span> {app.symptoms}
                 </div>
@@ -131,7 +131,7 @@ const AppointmentsListClient = ({ initialAppointments, patientId }) => {
               </div>
             </div>
 
-            {/* অ্যাকশন বাটন এবং কারেন্ট স্ট্যাটাস */}
+            {/* Action Buttons & Current Status */}
             <div className="flex flex-row md:flex-col lg:flex-row items-center gap-2 w-full md:w-auto border-t md:border-t-0 pt-3 md:pt-0 justify-end">
               <span className={`px-2.5 py-1 rounded-full text-xs font-bold uppercase tracking-wider border mr-auto md:mr-0 ${
                 app.appointmentStatus === "pending" ? "bg-amber-50 text-amber-600 border-amber-200" :
@@ -156,12 +156,12 @@ const AppointmentsListClient = ({ initialAppointments, patientId }) => {
         );
       })}
 
-      {/* ─── 📦 HEROUI/CUSTOM MODAL IMPLEMENTATION ─── */}
+      {/* --- HEROUI/CUSTOM MODAL IMPLEMENTATION --- */}
       {modalType && activeAppointment && (
         <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 transition-opacity duration-300">
           <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl border animate-in fade-in zoom-in-95 duration-200 space-y-4">
             
-            {/* ১. VIEW MODAL */}
+            {/* 1. VIEW MODAL */}
             {modalType === "view" && (
               <>
                 <div className="flex items-center gap-2 border-b pb-2">
@@ -180,7 +180,7 @@ const AppointmentsListClient = ({ initialAppointments, patientId }) => {
               </>
             )}
 
-            {/* ২. RESCHEDULE MODAL */}
+            {/* 2. RESCHEDULE MODAL */}
             {modalType === "reschedule" && (
               <form onSubmit={handleReschedule} className="space-y-4">
                 <div className="flex items-center gap-2 border-b pb-2">
@@ -206,7 +206,7 @@ const AppointmentsListClient = ({ initialAppointments, patientId }) => {
               </form>
             )}
 
-            {/* ৩. CANCEL MODAL */}
+            {/* 3. CANCEL MODAL */}
             {modalType === "cancel" && (
               <>
                 <div className="flex items-center gap-2 border-b pb-2 text-red-600">
@@ -223,7 +223,7 @@ const AppointmentsListClient = ({ initialAppointments, patientId }) => {
               </>
             )}
 
-            {/* ক্লোজ ফুটার (ভিউ মোডালের জন্য বা নরমাল ক্লোজ বাটন) */}
+            {/* Close footer for View Modal or general fallback Close Button */}
             {modalType === "view" && (
               <button onClick={closeModal} className="w-full border py-2 rounded-xl text-xs font-semibold text-gray-600 hover:bg-gray-50 transition mt-2">
                 Close View

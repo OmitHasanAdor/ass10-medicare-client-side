@@ -16,20 +16,19 @@ const PatientReviewsPage = async () => {
 
   if (patientId) {
     try {
-      // ১. পেশেন্টের দেওয়া আগের রিভিউগুলো আনা
+      // 1. Fetch previous reviews submitted by the patient
       const resReviews = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/reviews/patient/${patientId}`, { cache: "no-store" });
       if (resReviews.ok) reviews = await resReviews.json();
 
-      // ২. ড্রপডাউনে দেখানোর জন্য ডক্টরদের লিস্ট আনা (Add Review করার জন্য)
-      // আপনার ডক্টর লিস্ট নিয়ে আসার এপিআই ইউআরএলটি এখানে বসাবেন
+      // 2. Fetch the doctors list for the dropdown select component (to support Add Review)
       const resDoctors = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/doctors`, { cache: "no-store" });
-     if (resDoctors.ok) {
-  const responseData = await resDoctors.json();
-  // যদি রেসপন্স সরাসরি অ্যারে হয় তবে সেটাই নিবে, আর অবজেক্টের ভেতর .data বা .doctors থাকলে তা হ্যান্ডেল করবে
-  doctorsList = Array.isArray(responseData) 
-    ? responseData 
-    : (responseData.data || responseData.doctors || []);
-}
+      if (resDoctors.ok) {
+        const responseData = await resDoctors.json();
+        // Fallback checks if the response is a clean array or if it holds nested .data / .doctors structures
+        doctorsList = Array.isArray(responseData) 
+          ? responseData 
+          : (responseData.data || responseData.doctors || []);
+      }
     } catch (error) {
       console.error("Error loading review page data:", error);
     }
@@ -44,7 +43,7 @@ const PatientReviewsPage = async () => {
         </div>
       </div>
 
-      {/* ক্লায়েন্ট ইন্টারঅ্যাকশন কম্পোনেন্ট */}
+      {/* Client interaction component wrapper */}
       <PatientReviewsClient initialReviews={reviews} doctors={doctorsList} patientId={patientId} />
     </div>
   );

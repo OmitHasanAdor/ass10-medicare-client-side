@@ -8,7 +8,7 @@ const PatientReviewsClient = ({ initialReviews, doctors, patientId }) => {
     const [activeReview, setActiveReview] = useState(null);
     const [modalType, setModalType] = useState(null); // 'add' | 'edit' | 'delete'
 
-    // ফর্ম স্টেটস
+    // Form states
     const [selectedDoctorId, setSelectedDoctorId] = useState("");
     const [rating, setRating] = useState(5);
     const [reviewText, setReviewText] = useState("");
@@ -20,7 +20,7 @@ const PatientReviewsClient = ({ initialReviews, doctors, patientId }) => {
             setRating(review.rating);
             setReviewText(review.reviewText);
         } else {
-            // 🚀 doctors একটি অ্যারে এবং তার লেংথ আছে কিনা নিশ্চিত হওয়া
+            // Ensure doctors is an array and has length to prevent crashes
             setSelectedDoctorId(Array.isArray(doctors) && doctors.length > 0 ? doctors[0]._id : "");
             setRating(5);
             setReviewText("");
@@ -32,7 +32,7 @@ const PatientReviewsClient = ({ initialReviews, doctors, patientId }) => {
         setActiveReview(null);
     };
 
-    // ➕ Action: Add Review
+    // Action: Add Review
     const handleAddReview = async (e) => {
         e.preventDefault();
         try {
@@ -42,7 +42,7 @@ const PatientReviewsClient = ({ initialReviews, doctors, patientId }) => {
                 body: JSON.stringify({ patientId, doctorId: selectedDoctorId, rating, reviewText }),
             });
             if (res.ok) {
-                // পেজ রিলোড বা স্টেট আপডেট করে নতুন ডেটা রিফ্লেক্ট করা
+                // Reload the page or update state to reflect the new data
                 window.location.reload();
             }
         } catch (error) {
@@ -50,7 +50,7 @@ const PatientReviewsClient = ({ initialReviews, doctors, patientId }) => {
         }
     };
 
-    // 🔄 Action: Update Review
+    // Action: Update Review
     const handleUpdateReview = async (e) => {
         e.preventDefault();
         try {
@@ -68,7 +68,7 @@ const PatientReviewsClient = ({ initialReviews, doctors, patientId }) => {
         }
     };
 
-    // ❌ Action: Delete Review
+    // Action: Delete Review
     const handleDelete = async () => {
         try {
             const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/reviews/delete/${activeReview._id}`, { method: "DELETE" });
@@ -83,7 +83,7 @@ const PatientReviewsClient = ({ initialReviews, doctors, patientId }) => {
 
     return (
         <div className="space-y-4">
-            {/* নতুন রিভিউ দেওয়ার ট্রিগার বাটন */}
+            {/* Trigger button to write a new review */}
             <div className="flex justify-end">
                 <button
                     onClick={() => openModal("add")}
@@ -99,7 +99,7 @@ const PatientReviewsClient = ({ initialReviews, doctors, patientId }) => {
                     <p className="text-sm font-medium">You haven&apos;t submitted any reviews yet.</p>
                 </div>
             ) : (
-                /* 📱 🖥️ ১০০% রেসপন্সিভ রিভিউ গ্রিড/লিস্ট */
+                /* Responsive review grid/list container */
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {reviews.map((rev) => (
                         <div key={rev._id} className="bg-white border rounded-2xl p-5 shadow-sm flex flex-col justify-between space-y-4 hover:shadow-md transition">
@@ -112,7 +112,7 @@ const PatientReviewsClient = ({ initialReviews, doctors, patientId }) => {
                                         </p>
                                     </div>
 
-                                    {/* স্টার্স শোকেস */}
+                                    {/* Stars Showcase */}
                                     <div className="flex items-center gap-0.5 text-amber-400 bg-amber-50 px-2 py-0.5 rounded-lg border border-amber-100">
                                         <Star className="size-3 fill-amber-400" />
                                         <span className="text-xs font-bold text-amber-700">{rev.rating}</span>
@@ -124,7 +124,7 @@ const PatientReviewsClient = ({ initialReviews, doctors, patientId }) => {
                                 </p>
                             </div>
 
-                            {/* অ্যাকশন বাটনসমূহ */}
+                            {/* Action Buttons */}
                             <div className="flex justify-end items-center gap-2 pt-2 border-t border-zinc-100">
                                 <button onClick={() => openModal("edit", rev)} className="flex items-center gap-1 px-3 py-1.5 border hover:bg-gray-50 text-gray-600 rounded-xl text-xs font-semibold transition">
                                     <Edit3 className="size-3.5" /> Edit
@@ -138,12 +138,12 @@ const PatientReviewsClient = ({ initialReviews, doctors, patientId }) => {
                 </div>
             )}
 
-            {/* ─── 📦 HEROUI STYLE MODALS ─── */}
+            {/* --- HeroUI Style Modals --- */}
             {modalType && (
                 <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
                     <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl border space-y-4 animate-in fade-in zoom-in-95 duration-200">
 
-                        {/* ১. ADD / EDIT FORM MODAL */}
+                        {/* 1. ADD / EDIT FORM MODAL */}
                         {(modalType === "add" || modalType === "edit") && (
                             <form onSubmit={modalType === "add" ? handleAddReview : handleUpdateReview} className="space-y-4">
                                 <h3 className="text-lg font-bold text-gray-800 border-b pb-2">
@@ -158,7 +158,7 @@ const PatientReviewsClient = ({ initialReviews, doctors, patientId }) => {
                                             onChange={(e) => setSelectedDoctorId(e.target.value)}
                                             className="w-full border p-2.5 rounded-xl text-sm bg-gray-50 outline-none"
                                         >
-                                            {/* 🚀 Array.isArray দিয়ে চেক করে লুপ চালানো হচ্ছে যাতে ক্র্যাশ না করে */}
+                                            {/* Loop with array check to avoid runtime errors */}
                                             {Array.isArray(doctors) && doctors.map(doc => (
                                                 <option key={doc._id} value={doc._id}>{doc.doctorName} ({doc.specialization})</option>
                                             ))}
@@ -166,7 +166,7 @@ const PatientReviewsClient = ({ initialReviews, doctors, patientId }) => {
                                     </div>
                                 )}
 
-                                {/* স্টার রেটিং সিলেকশন */}
+                                {/* Star Rating Selection */}
                                 <div>
                                     <label className="text-xs font-semibold text-gray-600 block mb-1">Rating Score</label>
                                     <div className="flex gap-1.5">
@@ -183,7 +183,7 @@ const PatientReviewsClient = ({ initialReviews, doctors, patientId }) => {
                                     </div>
                                 </div>
 
-                                {/* রিভিউ টেক্সট এরিয়া */}
+                                {/* Review Textarea */}
                                 <div>
                                     <label className="text-xs font-semibold text-gray-600 block mb-1">Your Review / Experience</label>
                                     <textarea
@@ -205,7 +205,7 @@ const PatientReviewsClient = ({ initialReviews, doctors, patientId }) => {
                             </form>
                         )}
 
-                        {/* ২. DELETE CONFIRMATION MODAL */}
+                        {/* 2. DELETE CONFIRMATION MODAL */}
                         {modalType === "delete" && (
                             <div className="space-y-4">
                                 <h3 className="text-lg font-bold text-red-600 border-b pb-2">Delete Review?</h3>

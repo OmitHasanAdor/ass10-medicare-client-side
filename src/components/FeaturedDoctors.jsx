@@ -3,7 +3,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { Stethoscope, Award, DollarSign, ArrowRight } from "lucide-react";
 
-// Server-side data fetching (specifically filtering for Verified doctors)
 async function getFeaturedDoctors() {
     try {
         const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/doctors?status=verified`, {
@@ -77,7 +76,7 @@ export default async function FeaturedDoctors() {
                                 className="object-cover group-hover:scale-105 transition-transform duration-500"
                                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
                             />
-                            <span className="absolute bottom-4 left-4 inline-flex items-center gap-1 bg-zinc-900/90 dark:bg-zinc-50/90 text-[10px] font-extrabold tracking-wider uppercase px-2.5 py-1 text-white dark:text-zinc-900 rounded-lg backdrop-blur-sm">
+                            <span className="absolute bottom-4 left-4 inline-flex items-center gap-1 bg-blue-600 dark:bg-blue-500 text-[10px] font-extrabold tracking-wider uppercase px-2.5 py-1 text-white dark:text-zinc-900 rounded-lg backdrop-blur-sm">
                                 <Stethoscope size={10} /> {doctor.specialization}
                             </span>
                         </div>

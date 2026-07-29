@@ -108,10 +108,13 @@ export default async function FeaturedDoctors() {
                                 {/* Dynamic Routing Button */}
                                 <Link 
                                     href={`/find-doctors/${doctor._id}`}
-                                    className="w-full text-center bg-zinc-900 dark:bg-zinc-50 text-white dark:text-zinc-900 text-xs font-bold py-2.5 rounded-xl hover:opacity-90 transition-opacity mt-1 block"
+                                    className="group w-full flex justify-center items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm py-3 px-4 rounded-xl transition-all duration-200 shadow-lg shadow-blue-600/10"
                                 >
                                     Book Appointment
+                                     <ArrowRight className="group-hover:translate-x-1 text-white w-4 h-4 transition-transform duration-200" />
                                 </Link>
+
+                    
                             </div>
                         </div>
                     </div>

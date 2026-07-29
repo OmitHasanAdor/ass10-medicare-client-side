@@ -59,7 +59,7 @@ export default function MedicalSpecializations() {
                             className="flex flex-col items-center justify-center text-center p-6 bg-white dark:bg-zinc-900 border border-zinc-200/60 dark:border-zinc-800/80 rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.02)] hover:shadow-md hover:border-emerald-500/30 dark:hover:border-emerald-500/20 transition-all duration-300 cursor-pointer group"
                         >
                             {/* Light colored icon wrapper badge */}
-                            <div className="p-3 bg-blue-50 dark:bg-emerald-950/40 rounded-full text-emerald-600 dark:text-blue-400 mb-4 group-hover:scale-110 transition-transform duration-300">
+                            <div className="p-3 bg-blue-50 dark:bg-emerald-950/40 rounded-full text-blue-600 dark:text-blue-400 mb-4 group-hover:scale-110 transition-transform duration-300">
                                 <IconComponent size={22} strokeWidth={2.2} />
                             </div>
 

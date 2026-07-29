@@ -23,10 +23,10 @@ export default async function PlatformAnalytics() {
 
     // Configuration array for statistics card layout
     const statCards = [
-        { label: "Total Doctors", value: `${stats.totalDoctors}+`, bg: "bg-emerald-50 dark:bg-emerald-950/30 text-emerald-900 dark:text-emerald-100" },
+        { label: "Total Doctors", value: `${stats.totalDoctors}+`, bg: "bg-blue-50 dark:bg-blue-950/30 text-blue-900 dark:text-blue-100" },
         { label: "Patient Trust", value: `${stats.totalPatients}+`, bg: "bg-white dark:bg-zinc-900 text-zinc-950 dark:text-zinc-50 border border-zinc-200/60 dark:border-zinc-800" },
         { label: "Appointments Joined", value: `${stats.totalAppointments}+`, bg: "bg-white dark:bg-zinc-900 text-zinc-950 dark:text-zinc-50 border border-zinc-200/60 dark:border-zinc-800" },
-        { label: "Expert Reviews", value: `${stats.totalReviews}+`, bg: "bg-emerald-600 text-white" }
+        { label: "Expert Reviews", value: `${stats.totalReviews}+`, bg: "bg-blue-600 text-white" }
     ];
 
     return (

@@ -1,12 +1,11 @@
-import { DashboardSidebar } from "@/components/DashboardSidebar";
+import { requireRole } from '@/lib/core/session';
 
-const DasboardLayout = ({children}) => {
+export default async function PatientLayout({ children }) {
+    await requireRole('patient');
+
     return (
-           <div className="flex min-h-screen">
-            <DashboardSidebar />
-            <div className="flex-1">{children}</div>
+        <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950">
+            {children}
         </div>
     );
-};
-
-export default DasboardLayout;
+}

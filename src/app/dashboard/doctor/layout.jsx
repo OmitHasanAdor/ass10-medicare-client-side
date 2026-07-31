@@ -1,8 +1,10 @@
-import { requireRole } from '@/lib/core/session';
+import { requireRole } from "@/lib/core/session";
 
 
-const DoctorLayout =async ({children}) => {
+
+const DoctorLayout = async ({children}) => {
      await requireRole('doctor');
+     console.log("Doctor Layout");
     return children
 };
 

@@ -1,4 +1,3 @@
-// import React from 'react';
 import { requireRole } from '@/lib/core/session';
 
 const AdminLayout =async ({children}) => {

@@ -67,8 +67,9 @@ export async function requireRole(requiredRole) {
     }
 
     // 4. Validate role requirements
-    if (userData.role !== requiredRole) {
-        console.warn(`Access Denied. Required: ${requiredRole}, Found: ${userData.role}`);
+    if (userData?.role !== requiredRole) {
+        console.warn(`Access Denied. Required: ${requiredRole}, Found: ${userData?.role}`);
+        console.log("User Data:", userData , requiredRole);
         redirect("/unauthorized"); 
     }
 

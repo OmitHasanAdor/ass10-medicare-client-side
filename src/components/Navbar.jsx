@@ -41,6 +41,7 @@ const Navbar = async () => {
     { name: "About Us", href: "/about" },
     { name: "Contact Us", href: "/contact" },
   ];
+  console.log("Navbar session:", session, "fullUserData:", fullUserData, "dashboardHref:", dashboardHref);
 
   return (
     <nav className="sticky top-0 z-50 border-b bg-white/90 backdrop-blur-md">

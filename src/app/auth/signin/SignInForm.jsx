@@ -28,6 +28,7 @@ export default function SignInForm({ redirectTo = "/" }) {
     const [isGoogleLoading, setIsGoogleLoading] = useState(false); 
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
+    const [isGoogleLogin, setIsGoogleLogin] = useState(false);
 
     const router = useRouter();
     const { data: session } = useSession(); // Tracking current session data
@@ -47,68 +48,75 @@ export default function SignInForm({ redirectTo = "/" }) {
         }
     };
 
-    // Effect to sync data with the backend upon successful Google Sign-In
-    useEffect(() => {
-        if (session?.user) {
-            const syncGoogleUser = async () => {
-                try {
-                    const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/auth/google-sync`, {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({
-                            name: session.user.name,
-                            email: session.user.email,
-                            photo: session.user.image,
-                        })
-                    });
+useEffect(() => {
+    // Run only after Google Sign-In
+    if (!isGoogleLogin || !session?.user) return;
 
-                    if (response.ok) {
-                        toast.success("Welcome! Securely connected with Google Profile", {
-                            duration: 4000,
-                        });
-                        
-                        // Default role for Google login is 'patient', redirecting to the dashboard
-                        router.push("/dashboard/patient");
-                        router.refresh();
-                    } else {
-                        setError("Failed to sync profile with database.");
-                        toast.error("Profile synchronization failed.");
-                    }
-                } catch (err) {
-                    console.error("Sync error:", err);
-                    setError("Database connection failed during sync.");
-                } finally {
-                    setIsGoogleLoading(false);
-                }
-            };
-            syncGoogleUser();
-        }
-    }, [session, router]);
-
-    // Google Sign-In Handler
-    const handleGoogleSignIn = async () => {
-        setError("");
-        setIsGoogleLoading(true);
+    const syncGoogleUser = async () => {
         try {
-            await signIn.social({
-                provider: "google",
-                // Returns to this page on success so that the above useEffect runs to sync data
-                callbackURL: window.location.origin + "/auth/signin", 
-                newUserOptions: {
-                    data: {
-                        role: "patient" 
-                    }
+            const response = await fetch(
+                `${process.env.NEXT_PUBLIC_SERVER_URL}/api/auth/google-sync`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        name: session.user.name,
+                        email: session.user.email,
+                        photo: session.user.image,
+                    }),
                 }
-            });
-            
-            toast.success("Connecting with Google Secure Portal...");
+            );
+
+            if (response.ok) {
+                toast.success("Welcome! Securely connected with Google Profile", {
+                    duration: 4000,
+                });
+
+                router.push("/dashboard/patient");
+                router.refresh();
+            } else {
+                setError("Failed to sync profile with database.");
+                toast.error("Profile synchronization failed.");
+            }
         } catch (err) {
-            console.error(err);
-            setError("Google authentication failed.");
-            toast.error("Google login failed.");
+            console.error("Sync error:", err);
+            setError("Database connection failed during sync.");
+        } finally {
             setIsGoogleLoading(false);
+            setIsGoogleLogin(false);
         }
     };
+
+    syncGoogleUser();
+}, [session, isGoogleLogin, router]);
+    // Google Sign-In Handler
+    const handleGoogleSignIn = async () => {
+    setError("");
+    setIsGoogleLoading(true);
+    setIsGoogleLogin(true);
+
+    try {
+        await signIn.social({
+            provider: "google",
+            callbackURL: window.location.origin + "/auth/signin",
+            newUserOptions: {
+                data: {
+                    role: "patient",
+                },
+            },
+        });
+
+        toast.success("Connecting with Google Secure Portal...");
+    } catch (err) {
+        console.error(err);
+        setError("Google authentication failed.");
+        toast.error("Google login failed.");
+        setIsGoogleLoading(false);
+        setIsGoogleLogin(false);
+    }
+};
 
     // Email Sign-In Handler
     const handleSignIn = async (e) => {

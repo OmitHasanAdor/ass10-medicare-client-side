@@ -10,7 +10,7 @@ export default async function DashboardLayout({ children }) {
     }
 
     return (
-        <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950">
+        <div className="flex min-h-screen bg-zinc-50 dark:bg-zinc-950">
             <DashboardSidebar />
           <div className="flex-1">{children}</div>
         </div>

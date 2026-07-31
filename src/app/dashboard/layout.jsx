@@ -1,11 +1,18 @@
-import { requireRole } from '@/lib/core/session';
+import { DashboardSidebar } from "@/components/DashboardSidebar";
+import { getUserSession } from "@/lib/core/session";
+import { redirect } from "next/navigation";
 
-export default async function PatientLayout({ children }) {
-    await requireRole('patient');
+export default async function DashboardLayout({ children }) {
+    const user = await getUserSession();
+
+    if (!user) {
+        redirect("/auth/signin");
+    }
 
     return (
         <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950">
-            {children}
+            <DashboardSidebar />
+          <div className="flex-1">{children}</div>
         </div>
     );
 }

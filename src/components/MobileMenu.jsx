@@ -24,7 +24,7 @@ const MobileMenu = ({ session, navLinks, dashboardHref }) => {
     <div className="fixed inset-0 z-999 bg-black/50">
       <div className="absolute right-0 top-0 h-full w-72 bg-white p-6 shadow-xl">
         <div className="flex justify-end">
-          <button onClick={() => setOpen(false)}>
+          <button onClick={() => setOpen(false)} aria-label="Close menu">
             <X />
           </button>
         </div>
@@ -80,7 +80,7 @@ const MobileMenu = ({ session, navLinks, dashboardHref }) => {
 
   return (
     <>
-      <button onClick={() => setOpen(true)}>
+      <button onClick={() => setOpen(true)} aria-label="Open menu">
         <Menu size={28} />
       </button>
 

@@ -1,5 +1,9 @@
 # 🩺 MediCare Connect – Hospital Appointment & Healthcare Management System
 
+[![Live Site](https://img.shields.io/badge/Live%20Site-Visit-blue?style=for-the-badge)](https://ass10-medicare-client-side.vercel.app/)
+[![Client Repo](https://img.shields.io/badge/Client-Repository-black?style=for-the-badge&logo=github)](https://github.com/OmitHasanAdor/ass10-medicare-client-side)
+[![Server Repo](https://img.shields.io/badge/Server-Repository-green?style=for-the-badge&logo=github)](https://github.com/OmitHasanAdor/ass10-medicare-server)
+
 ### MediCare Connect is a modern, secure, and fully responsive healthcare platform that connects patients with verified doctors. Users can easily search for specialists, schedule appointments, make secure online payments, and manage their healthcare activities through dedicated dashboards. The platform also provides role-based access for patients, doctors, and administrators, ensuring an efficient healthcare management experience.
 
 ---
@@ -31,3 +35,13 @@
 8. **Comprehensive Appointment Management:** Specialized panels for patients to track bookings, doctors to manage clinical consultations, and admins to monitor global platform activities.
 9. **Responsive Modern UI:** A beautifully optimized layout using Tailwind CSS and HeroUI components that adapts seamlessly to mobile, tablet, and desktop viewports.
 10. **Robust Error & Status Handling:** Professional boundary handling across the platform, including unauthorized entry screens, custom loading animations, error boundaries, and custom 404 pages.
+
+---
+
+## 🔗 Project Links
+
+| Resource | Link |
+|---|---|
+| 🌐 Live Site | [ass10-medicare-client-side.vercel.app](https://ass10-medicare-client-side.vercel.app/) |
+| 💻 Client Repository | [github.com/OmitHasanAdor/ass10-medicare-client-side](https://github.com/OmitHasanAdor/ass10-medicare-client-side) |
+| 🖥️ Server Repository | [github.com/OmitHasanAdor/ass10-medicare-server](https://github.com/OmitHasanAdor/ass10-medicare-server) |
